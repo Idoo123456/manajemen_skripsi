@@ -176,10 +176,10 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
             {/* Kop Surat Resmi Universitas Riau */}
             <div className="border-b-[3px] border-double border-black pb-3 text-center relative">
               {/* Logo / Lambang Resmi Universitas Riau */}
-              <div className="absolute left-1 top-0 w-24 h-20 flex items-center justify-center">
+              <div className="absolute left-1 top-0 w-20 h-20 flex items-center justify-center">
                 <img
-                  src="/logo-unri.png"
-                  alt="Lambang Universitas Riau"
+                  src="/lambang-unri.png"
+                  alt="Lambang Resmi Universitas Riau"
                   className="h-16 w-auto object-contain"
                 />
               </div>
