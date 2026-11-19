@@ -261,7 +261,7 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                 Pengumuman Layanan & Standar Dokumen
               </h2>
               <p className="text-sm text-slate-500 mt-1">
-                Informasi terbaru mengenai alur verifikasi, syarat bebas pustaka, dan regulasi penulisan.
+                Informasi terbaru mengenai alur verifikasi berkas, pengunggahan naskah, dan regulasi penulisan skripsi.
               </p>
             </div>
 

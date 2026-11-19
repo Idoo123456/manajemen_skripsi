@@ -25,8 +25,6 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
     jurusan,
     jenisDokumen,
     pelapor,
-    users,
-    currentUser,
     sendCertificateToGmail
   } = useApp();
 
@@ -34,10 +32,6 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
   const fak = fakultas.find(f => f.id_fakultas === skripsiItem.id_fakultas);
   const jur = jurusan.find(j => j.id_jurusan === skripsiItem.id_jurusan);
   const jenis = jenisDokumen.find(d => d.id_jenis_dokumen === skripsiItem.id_jenis_dokumen);
-  
-  // Find user to check Pinjam
-  const userRecord = users.find(u => u.UserName === skripsiItem.nim) || currentUser;
-  const pinjamCount = userRecord ? userRecord.Pinjam : 0;
 
   // Active signatories from table pelapor WHERE active === 1
   const activeSignatories = pelapor.filter(p => p.active === 1);
@@ -49,10 +43,10 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
 
   const [isSendingEmail, setIsSendingEmail] = useState<boolean>(false);
 
-  // Status kelayakan cetak
-  const isEligible = skripsiItem.hard_copy === 1 && skripsiItem.soft_copy === 1 && pinjamCount === 0;
+  // Status kelayakan cetak: Hardcopy dan Softcopy sudah diserahkan & diverifikasi
+  const isEligible = skripsiItem.hard_copy === 1 && skripsiItem.soft_copy === 1;
 
-  // Format date in Indonesian: e.g. "20 Juni 2024"
+  // Format date in Indonesian: e.g. "20 Juni 2026"
   const formatIndonesianDate = (dateStr: string) => {
     try {
       const date = new Date(dateStr);
@@ -93,64 +87,76 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-slate-900 leading-tight">
-                Pratinjau Surat Keterangan Bebas Pustaka
+                Pratinjau Surat Tanda Terima Penyerahan Skripsi
               </h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                UPA Perpustakaan Universitas Riau • Dokumen Resmi Yudisium
+                UPA Perpustakaan Universitas Riau • Dokumen Resmi Syarat Yudisium
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-end sm:self-auto flex-wrap">
-            {/* Button: Send to Gmail */}
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            {/* Send to Gmail button */}
             <button
               onClick={handleSendEmail}
               disabled={isSendingEmail}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 transition-all shadow-sm cursor-pointer"
-              title="Kirim salinan surat resmi ini ke akun Gmail mahasiswa"
+              className="px-3.5 py-2 rounded-xl bg-sky-50 border border-sky-200 hover:bg-sky-100 text-sky-800 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              title="Kirim dokumen resmi ini ke email mahasiswa"
             >
-              <Send className="w-3.5 h-3.5 text-blue-600" />
-              <span>{isSendingEmail ? 'Mengirim...' : 'Kirim ke Gmail'}</span>
+              <Send className="w-3.5 h-3.5 text-sky-600" />
+              <span>{isSendingEmail ? 'Mengirim...' : 'Kirim ke Email'}</span>
             </button>
 
-            {/* Button: Print A4 */}
+            {/* Print Button */}
             <button
               onClick={handlePrint}
-              className="flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-blue-700 to-sky-600 hover:from-blue-600 hover:to-sky-500 text-white shadow-md shadow-blue-500/20 transition-all cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold shadow-md shadow-blue-700/20 transition-all flex items-center gap-2 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
-              <span>Cetak Dokumen (Print A4)</span>
+              <span>Cetak Dokumen (A4)</span>
             </button>
 
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
-              title="Tutup Pratinjau"
+              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* Toolbar Bar: Status Verifikasi & Pilihan Pejabat (Hidden in Print) */}
-        <div className="print:hidden px-4 sm:px-6 py-2.5 bg-slate-50 border-b border-slate-200 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        {/* Status Verification Pill Warning (Hidden in Print) */}
+        {!isEligible && (
+          <div className="print:hidden mx-6 mt-4 p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+            <div className="space-y-0.5">
+              <span className="font-bold">Perhatian: Berkas Skripsi Belum Lengkap Terverifikasi!</span>
+              <p className="text-[11px] text-amber-700">
+                Hardcopy: {skripsiItem.hard_copy === 1 ? 'Sudah diserahkan' : 'Belum diserahkan'} • Softcopy PDF: {skripsiItem.soft_copy === 1 ? 'Sudah divalidasi' : 'Belum divalidasi'}. Hubungi petugas loket repositori.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Signatory Selector Bar (Hidden in Print) */}
+        <div className="print:hidden px-6 py-2.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between text-xs gap-3">
           <div className="flex items-center gap-2">
+            <span className="text-slate-500">Status Dokumen:</span>
             {isEligible ? (
-              <div className="flex items-center gap-1.5 text-emerald-800 font-semibold">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Status Berkas: Lengkap & Terverifikasi Bebas Tanggungan (Siap Dicetak)</span>
-              </div>
+              <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                SAH & SIAP CETAK
+              </span>
             ) : (
-              <div className="flex items-center gap-1.5 text-amber-800 font-semibold">
-                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-                <span>Status Berkas: Menunggu verifikasi fisik/sirkulasi lengkap</span>
-              </div>
+              <span className="inline-flex items-center gap-1 font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                PROSES VERIFIKASI
+              </span>
             )}
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-slate-600 font-medium whitespace-nowrap">Pejabat Pengesah:</span>
+            <span className="text-slate-600 font-medium whitespace-nowrap">Pejabat Penandatangan:</span>
             <select
               value={selectedPelaporId}
               onChange={(e) => setSelectedPelaporId(Number(e.target.value))}
@@ -175,7 +181,7 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
           >
             {/* Kop Surat Resmi Universitas Riau */}
             <div className="border-b-[3px] border-double border-black pb-3 text-center relative">
-              {/* Logo / Lambang Resmi Universitas Riau */}
+              {/* Lambang Resmi Universitas Riau */}
               <div className="absolute left-1 top-0 w-20 h-20 flex items-center justify-center">
                 <img
                   src="/lambang-unri.png"
@@ -208,21 +214,18 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
               <h2 className="text-[15px] font-bold uppercase tracking-wide font-serif text-black underline underline-offset-4 decoration-1">
                 SURAT TANDA TERIMA PENYERAHAN SKRIPSI / KARYA ILMIAH
               </h2>
-              <p className="text-[12px] font-serif uppercase tracking-wider text-black font-semibold mt-0.5">
-                DAN SURAT KETERANGAN BEBAS PERPUSTAKAAN
-              </p>
               <p className="text-[12.5px] font-serif font-medium mt-1 text-neutral-900">
-                Nomor: <span className="font-serif font-bold text-black">{skripsiItem.no_surat || '002/SKR/FT/2024'}</span>
+                Nomor: <span className="font-serif font-bold text-black">{skripsiItem.no_surat || '001/SKR/FT/2026'}</span>
               </p>
             </div>
 
             {/* Isi Surat */}
             <div className="space-y-4 text-justify font-serif text-[13px] leading-relaxed text-black">
               <p>
-                Kepala Unit Penunjang Akademik (UPA) Perpustakaan Universitas Riau dengan ini menerangkan bahwa:
+                Kepala Unit Penunjang Akademik (UPA) Perpustakaan Universitas Riau menerangkan bahwa mahasiswa yang tercantum di bawah ini:
               </p>
 
-              {/* Data Mahasiswa Table (Rapi dengan Font Serif Seragam) */}
+              {/* Data Mahasiswa Table */}
               <div className="my-3 pl-4 font-serif text-[13px]">
                 <table className="w-full border-collapse">
                   <tbody>
@@ -259,7 +262,7 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-1 text-black font-normal">Tanggal Pengesahan</td>
+                      <td className="py-1 text-black font-normal">Tanggal Penyerahan</td>
                       <td className="py-1 text-center">:</td>
                       <td className="py-1 font-normal text-black">{formatIndonesianDate(skripsiItem.tanggal)}</td>
                     </tr>
@@ -269,7 +272,7 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
 
               {/* Verifikasi Kelengkapan Berkas */}
               <p>
-                Telah menyelesaikan seluruh kewajiban administrasi kepustakaan sebagai persyaratan pendaftaran yudisium dan wisuda, dengan rincian status verifikasi:
+                Telah menyerahkan karya ilmiah dan menyelesaikan seluruh kewajiban administrasi repositori naskah tugas akhir sebagai syarat pendaftaran yudisium dan wisuda, dengan rincian verifikasi:
               </p>
 
               <div className="pl-4 font-serif text-[12.5px] space-y-1.5 text-black">
@@ -278,7 +281,7 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
                     ✓
                   </span>
                   <span>
-                    <strong>Penyerahan Naskah Hardcopy:</strong> Naskah jilid tugas akhir lengkap telah diserahkan ke bagian pengolahan fisik perpustakaan.
+                    <strong>Penyerahan Naskah Hardcopy:</strong> Buku jilid tugas akhir lengkap telah diserahkan dan diarsipkan di loket fisik UPA Perpustakaan.
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5">
@@ -286,7 +289,7 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
                     ✓
                   </span>
                   <span>
-                    <strong>Pengunggahan Naskah Softcopy Digital:</strong> Naskah PDF lengkap (Fulltext & Terpisah) telah divalidasi ke sistem E-Repository.
+                    <strong>Pengunggahan Naskah Softcopy Digital:</strong> Naskah format PDF lengkap (Halaman Judul, Pengesahan, Abstrak, BAB I-V, dan Lampiran) telah divalidasi ke E-Repository institusi.
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5">
@@ -294,13 +297,13 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
                     ✓
                   </span>
                   <span>
-                    <strong>Status Bebas Tanggungan Koleksi:</strong> Dinyatakan <strong className="uppercase">BEBAS PINJAMAN</strong> (0 buku / tidak memiliki tanggungan denda sirkulasi).
+                    <strong>Keaslian Naskah & Uji Similaritas:</strong> Naskah telah dilengkapi lembar persetujuan bebas plagiarisme dan dinyatakan memenuhi syarat publikasi ilmiah.
                   </span>
                 </div>
               </div>
 
               <p className="pt-2">
-                Demikian Surat Keterangan Bebas Pustaka dan Penyerahan Karya Ilmiah ini diterbitkan dengan sebenarnya untuk dapat dipergunakan sebagaimana mestinya.
+                Demikian Surat Tanda Terima Penyerahan Skripsi ini diterbitkan dengan sebenarnya untuk dapat dipergunakan sebagai kelengkapan berkas yudisium dan kelulusan mahasiswa.
               </p>
             </div>
 

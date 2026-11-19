@@ -84,8 +84,6 @@ interface AppContextType {
   addUser: (item: Omit<User, 'idUser'>) => void;
   updateUser: (id: number, updated: Partial<User>) => void;
   deleteUser: (id: number) => void;
-  setUserLoan: (id: number, amount: number) => void;
-  clearUserLoan: (id: number) => void;
 
   // Master Data Actions
   addFakultas: (item: Omit<Fakultas, 'id_fakultas'>) => void;
@@ -106,8 +104,8 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'skripsi_unri_database_v3';
-const USER_STORAGE_KEY = 'skripsi_unri_current_user_v3';
+const STORAGE_KEY = 'sim_skripsi_unri_v5';
+const USER_STORAGE_KEY = 'sim_skripsi_current_user_v5';
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Load state from localStorage or initialData
@@ -146,69 +144,52 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return saved ? JSON.parse(saved) : INITIAL_USERS;
   });
 
-  // Current User (default guest or stored)
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     const saved = localStorage.getItem(USER_STORAGE_KEY);
     return saved ? JSON.parse(saved) : null;
   });
 
-  // Navigation tab
+  // UI Navigation & Modals
   const [activeTab, setActiveTab] = useState<'home' | 'repository' | 'guides' | 'student' | 'tracking' | 'admin'>('home');
   const [trackingNim, setTrackingNim] = useState<string>('');
-
-  // Modals
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<Tulisan | null>(null);
   const [selectedSkripsiForPrint, setSelectedSkripsiForPrint] = useState<Skripsi | null>(null);
   const [previewEmailModal, setPreviewEmailModal] = useState<{ skripsi: Skripsi; recipientEmail: string } | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
-  // Sync to localStorage
-  useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_fakultas`, JSON.stringify(fakultas));
-  }, [fakultas]);
-
-  // Fetch initial fresh data directly from Database API
+  // Sync to API on initial mount if server available
   useEffect(() => {
     const fetchDbData = async () => {
       try {
-        const [resSkripsi, resFak, resJur, resJenis, resPel, resTul, resUsr] = await Promise.allSettled([
-          fetch('/api/skripsi').then(r => (r.ok ? r.json() : null)),
+        const [resFak, resJur, resDoc, resPel, resSkr, resTul, resUsr] = await Promise.allSettled([
           fetch('/api/fakultas').then(r => (r.ok ? r.json() : null)),
           fetch('/api/jurusan').then(r => (r.ok ? r.json() : null)),
           fetch('/api/jenis-dokumen').then(r => (r.ok ? r.json() : null)),
           fetch('/api/pelapor').then(r => (r.ok ? r.json() : null)),
+          fetch('/api/skripsi').then(r => (r.ok ? r.json() : null)),
           fetch('/api/tulisan').then(r => (r.ok ? r.json() : null)),
           fetch('/api/users').then(r => (r.ok ? r.json() : null)),
         ]);
 
-        if (resSkripsi.status === 'fulfilled' && resSkripsi.value) {
-          setSkripsi(resSkripsi.value);
-        }
-        if (resFak.status === 'fulfilled' && resFak.value && resFak.value.length > 0) {
-          setFakultas(resFak.value);
-        }
-        if (resJur.status === 'fulfilled' && resJur.value && resJur.value.length > 0) {
-          setJurusan(resJur.value);
-        }
-        if (resJenis.status === 'fulfilled' && resJenis.value && resJenis.value.length > 0) {
-          setJenisDokumen(resJenis.value);
-        }
-        if (resPel.status === 'fulfilled' && resPel.value && resPel.value.length > 0) {
-          setPelapor(resPel.value);
-        }
-        if (resTul.status === 'fulfilled' && resTul.value && resTul.value.length > 0) {
-          setTulisan(resTul.value);
-        }
-        if (resUsr.status === 'fulfilled' && resUsr.value && resUsr.value.length > 0) {
-          setUsers(resUsr.value);
-        }
+        if (resFak.status === 'fulfilled' && resFak.value && resFak.value.length > 0) setFakultas(resFak.value);
+        if (resJur.status === 'fulfilled' && resJur.value && resJur.value.length > 0) setJurusan(resJur.value);
+        if (resDoc.status === 'fulfilled' && resDoc.value && resDoc.value.length > 0) setJenisDokumen(resDoc.value);
+        if (resPel.status === 'fulfilled' && resPel.value && resPel.value.length > 0) setPelapor(resPel.value);
+        if (resSkr.status === 'fulfilled' && resSkr.value && resSkr.value.length > 0) setSkripsi(resSkr.value);
+        if (resTul.status === 'fulfilled' && resTul.value && resTul.value.length > 0) setTulisan(resTul.value);
+        if (resUsr.status === 'fulfilled' && resUsr.value && resUsr.value.length > 0) setUsers(resUsr.value);
       } catch (err) {
-        console.warn('API error, using local state:', err);
+        console.warn('API sync warning:', err);
       }
     };
 
     fetchDbData();
   }, []);
+
+  // Sync to LocalStorage
+  useEffect(() => {
+    localStorage.setItem(`${STORAGE_KEY}_fakultas`, JSON.stringify(fakultas));
+  }, [fakultas]);
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_jurusan`, JSON.stringify(jurusan));
@@ -232,7 +213,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     localStorage.setItem(`${STORAGE_KEY}_users`, JSON.stringify(users));
-    // If current logged-in user exists, refresh their data from users state
     if (currentUser) {
       const updatedCurrent = users.find(u => u.idUser === currentUser.idUser);
       if (updatedCurrent) {
@@ -288,7 +268,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         ket_jurusan: jur ? jur.keterangan : '-',
         fakultas: fak ? fak.fakultas : '-',
         ket_fakultas: fak ? fak.keterangan : '-',
-        jenis_dokumen: jenis ? jenis.jenis_dokumen : '-',
+        jenis_dokumen: jenis ? jenis.jenis_dokumen : 'Skripsi',
       };
     });
   }, [skripsi, fakultas, jurusan, jenisDokumen]);
@@ -329,7 +309,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     if (role === 'siti') {
-      // Siti Nurhaliza (Pinjam: 0, Bebas Pustaka Siap)
       const siti = users.find(u => u.UserName === '2007111002');
       if (siti) {
         setCurrentUser(siti);
@@ -339,7 +318,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     if (role === 'rizki') {
-      // M. Rizki Pratama (Pinjam: 1, Blocked by Book Loan)
       const rizki = users.find(u => u.UserName === '2007111001');
       if (rizki) {
         setCurrentUser(rizki);
@@ -349,7 +327,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
 
     if (role === 'admin') {
-      // Admin Perpustakaan
       const admin = users.find(u => u.UserName === 'admin');
       if (admin) {
         setCurrentUser(admin);
@@ -360,7 +337,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Skripsi Handlers (Connected to MySQL Database API)
   const addSkripsi = (item: Omit<Skripsi, 'id_skripsi'>) => {
-    // Sync with Database API
     fetch('/api/skripsi', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -380,7 +356,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateSkripsi = (id: number, updated: Partial<Skripsi>) => {
-    // Sync with Database API
     fetch(`/api/skripsi/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -391,7 +366,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deleteSkripsi = (id: number) => {
-    // Sync with Database API
     fetch(`/api/skripsi/${id}`, { method: 'DELETE' }).catch(err =>
       console.warn('Database delete offline fallback:', err)
     );
@@ -400,15 +374,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const toggleHardCopy = (id: number) => {
-    setSkripsi(prev =>
-      prev.map(s => (s.id_skripsi === id ? { ...s, hard_copy: s.hard_copy === 1 ? 0 : 1 } : s))
-    );
+    const item = skripsi.find(s => s.id_skripsi === id);
+    if (!item) return;
+    const newVal = item.hard_copy === 1 ? 0 : 1;
+    updateSkripsi(id, { hard_copy: newVal });
   };
 
   const toggleSoftCopy = (id: number) => {
-    setSkripsi(prev =>
-      prev.map(s => (s.id_skripsi === id ? { ...s, soft_copy: s.soft_copy === 1 ? 0 : 1 } : s))
-    );
+    const item = skripsi.find(s => s.id_skripsi === id);
+    if (!item) return;
+    const newVal = item.soft_copy === 1 ? 0 : 1;
+    updateSkripsi(id, { soft_copy: newVal });
   };
 
   // Pelapor Handlers
@@ -463,15 +439,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const deleteUser = (id: number) => {
     setUsers(prev => prev.filter(u => u.idUser !== id));
-  };
-
-  const setUserLoan = (id: number, amount: number) => {
-    const safeAmount = Math.max(0, amount);
-    setUsers(prev => prev.map(u => (u.idUser === id ? { ...u, Pinjam: safeAmount } : u)));
-  };
-
-  const clearUserLoan = (id: number) => {
-    setUserLoan(id, 0);
   };
 
   // Master Data Handlers
@@ -549,15 +516,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       email_sent_at: nowTimestamp,
     });
 
-    // Open real-time Gmail preview modal
-    setPreviewEmailModal({
-      skripsi: { ...targetSkripsi, email: recipient, email_sent_at: nowTimestamp },
-      recipientEmail: recipient
-    });
+    // Also call backend API if online
+    fetch('/api/send-certificate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ skripsiId, email: recipient }),
+    }).catch(err => console.warn('API email log warning:', err));
 
     return {
       success: true,
-      message: `Surat keterangan bebas pustaka berhasil dikirim ke alamat ${recipient}!`
+      message: `Surat Tanda Terima Penyerahan Skripsi resmi berhasil dikirim ke alamat ${recipient}!`,
     };
   };
 
@@ -589,9 +557,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedSkripsiForPrint,
         previewEmailModal,
         setPreviewEmailModal,
-        sendCertificateToGmail,
         isLoginModalOpen,
         setIsLoginModalOpen,
+        sendCertificateToGmail,
         addSkripsi,
         updateSkripsi,
         deleteSkripsi,
@@ -608,8 +576,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addUser,
         updateUser,
         deleteUser,
-        setUserLoan,
-        clearUserLoan,
         addFakultas,
         updateFakultas,
         deleteFakultas,

@@ -15,9 +15,7 @@ import {
   Plus,
   Search,
   X,
-  Printer,
-  Minus,
-  Check
+  Printer
 } from 'lucide-react';
 import { PrintCertificateModal } from './PrintCertificateModal';
 
@@ -37,8 +35,6 @@ export const AdminDashboard: React.FC = () => {
     updateSkripsi,
     deleteSkripsi,
     addSkripsi,
-    setUserLoan,
-    clearUserLoan,
     addUser,
     updateUser,
     deleteUser,
@@ -85,26 +81,26 @@ export const AdminDashboard: React.FC = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 border border-blue-200 text-blue-700 mb-2">
             <Shield className="w-3.5 h-3.5 text-blue-600" />
-            Pusat Kendali Administrator Repositori
+            <span>Pusat Kendali Administrator Repositori</span>
           </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            Dashboard Manajemen UPA Perpustakaan
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Dashboard Manajemen Skripsi & Tugas Akhir
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Verifikasi berkas karya ilmiah, kelola tanggungan pinjaman buku, atur pejabat penandatangan, dan pengumuman.
+            Validasi berkas naskah fisik & digital, kelola akun mahasiswa, atur pejabat penandatangan, dan panduan repositori.
           </p>
         </div>
 
         {/* Quick Stats Pill */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-700 shadow-sm font-medium">
-            Skripsi: <strong className="text-blue-700 font-bold">{skripsi.length}</strong>
+          <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-700 shadow-xs font-medium">
+            Total Skripsi: <strong className="text-blue-700 font-bold">{skripsi.length}</strong>
           </span>
-          <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-700 shadow-sm font-medium">
+          <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-700 shadow-xs font-medium">
             Pengguna: <strong className="text-blue-700 font-bold">{users.length}</strong>
           </span>
-          <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-700 shadow-sm font-medium">
-            Penandatangan Aktif:{' '}
+          <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-xs text-slate-700 shadow-xs font-medium">
+            Pejabat Aktif:{' '}
             <strong className="text-emerald-600 font-bold">{pelapor.filter(p => p.active === 1).length}</strong>
           </span>
         </div>
@@ -117,7 +113,7 @@ export const AdminDashboard: React.FC = () => {
             setActiveTab('skripsi');
             setSearchFilter('');
           }}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
             activeTab === 'skripsi'
               ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
               : 'bg-white text-slate-600 hover:text-blue-700 border border-slate-200'
@@ -132,14 +128,14 @@ export const AdminDashboard: React.FC = () => {
             setActiveTab('users');
             setSearchFilter('');
           }}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
             activeTab === 'users'
               ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
               : 'bg-white text-slate-600 hover:text-blue-700 border border-slate-200'
           }`}
         >
           <Users className="w-4 h-4" />
-          <span>Status Pinjaman & Akun ({users.length})</span>
+          <span>Pengguna & Mahasiswa ({users.length})</span>
         </button>
 
         <button
@@ -147,7 +143,7 @@ export const AdminDashboard: React.FC = () => {
             setActiveTab('pelapor');
             setSearchFilter('');
           }}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
             activeTab === 'pelapor'
               ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
               : 'bg-white text-slate-600 hover:text-blue-700 border border-slate-200'
@@ -162,7 +158,7 @@ export const AdminDashboard: React.FC = () => {
             setActiveTab('tulisan');
             setSearchFilter('');
           }}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
             activeTab === 'tulisan'
               ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
               : 'bg-white text-slate-600 hover:text-blue-700 border border-slate-200'
@@ -177,7 +173,7 @@ export const AdminDashboard: React.FC = () => {
             setActiveTab('master');
             setSearchFilter('');
           }}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
             activeTab === 'master'
               ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25'
               : 'bg-white text-slate-600 hover:text-blue-700 border border-slate-200'
@@ -207,7 +203,7 @@ export const AdminDashboard: React.FC = () => {
 
             <button
               onClick={() => setIsAddSkripsiOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all self-start sm:self-auto"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all self-start sm:self-auto cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Tambah Berkas Skripsi</span>
@@ -218,7 +214,7 @@ export const AdminDashboard: React.FC = () => {
             <table className="w-full text-left border-collapse text-xs">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase text-[10px] font-bold tracking-wider">
-                  <th className="py-3 px-4 min-w-[150px]">No. Surat / Dokumen</th>
+                  <th className="py-3 px-4 min-w-[150px]">No. Surat / Tanggal</th>
                   <th className="py-3 px-4 min-w-[180px]">Mahasiswa & NIM</th>
                   <th className="py-3 px-4 min-w-[320px]">Judul Karya Ilmiah</th>
                   <th className="py-3 px-4 min-w-[120px] text-center">Hardcopy (1-Klik)</th>
@@ -248,17 +244,15 @@ export const AdminDashboard: React.FC = () => {
                         <div className="font-bold text-slate-900 text-sm">{item.nama}</div>
                         <div className="text-slate-500 font-mono text-xs mt-0.5 font-bold">NIM: {item.nim}</div>
                       </td>
-                      {/* Judul Karya Lengkap tanpa terpotong */}
                       <td className="py-3 px-4 align-top">
                         <p className="text-xs text-slate-900 font-medium leading-relaxed break-words">
                           {item.judul}
                         </p>
                       </td>
-                      {/* 1-Click Toggle Hardcopy */}
                       <td className="py-3 px-4 text-center align-top">
                         <button
                           onClick={() => toggleHardCopy(item.id_skripsi)}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all whitespace-nowrap ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all whitespace-nowrap cursor-pointer ${
                             item.hard_copy === 1
                               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                               : 'bg-rose-50 text-rose-700 border border-rose-200'
@@ -278,11 +272,10 @@ export const AdminDashboard: React.FC = () => {
                           )}
                         </button>
                       </td>
-                      {/* 1-Click Toggle Softcopy */}
                       <td className="py-3 px-4 text-center align-top">
                         <button
                           onClick={() => toggleSoftCopy(item.id_skripsi)}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all whitespace-nowrap ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all whitespace-nowrap cursor-pointer ${
                             item.soft_copy === 1
                               ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                               : 'bg-rose-50 text-rose-700 border border-rose-200'
@@ -306,14 +299,14 @@ export const AdminDashboard: React.FC = () => {
                         <div className="flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => setPreviewSkripsiPrint(item)}
-                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-blue-700"
-                            title="Pratinjau Cetak Bebas Pustaka"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-blue-700 cursor-pointer"
+                            title="Pratinjau Cetak Tanda Terima (A4)"
                           >
                             <Printer className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setEditingSkripsi(item)}
-                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-indigo-700"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-indigo-700 cursor-pointer"
                             title="Edit Data"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -324,7 +317,7 @@ export const AdminDashboard: React.FC = () => {
                                 deleteSkripsi(item.id_skripsi);
                               }
                             }}
-                            className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700"
+                            className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 cursor-pointer"
                             title="Hapus"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -340,7 +333,7 @@ export const AdminDashboard: React.FC = () => {
       )}
 
       {/* ======================================================== */}
-      {/* TAB 2: STATUS PINJAMAN & AKUN PENGGUNA                    */}
+      {/* TAB 2: PENGGUNA & MAHASISWA (`users`)                     */}
       {/* ======================================================== */}
       {activeTab === 'users' && (
         <div className="rounded-3xl bg-white border border-slate-200 shadow-md shadow-slate-200/50 p-6">
@@ -358,10 +351,10 @@ export const AdminDashboard: React.FC = () => {
 
             <button
               onClick={() => setIsAddUserOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all self-start sm:self-auto"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all self-start sm:self-auto cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Tambah User Baru</span>
+              <span>Tambah Pengguna Baru</span>
             </button>
           </div>
 
@@ -369,11 +362,12 @@ export const AdminDashboard: React.FC = () => {
             <table className="w-full text-left border-collapse text-xs">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase text-[10px] font-bold tracking-wider">
-                  <th className="py-3 px-4 min-w-[140px]">User / NIM</th>
+                  <th className="py-3 px-4 min-w-[140px]">Username / NIM</th>
                   <th className="py-3 px-4 min-w-[180px]">Nama Lengkap</th>
-                  <th className="py-3 px-4 min-w-[110px]">Tipe Akun</th>
+                  <th className="py-3 px-4 min-w-[110px]">Peran Akun</th>
+                  <th className="py-3 px-4 min-w-[100px]">Jenis Kelamin</th>
                   <th className="py-3 px-4 min-w-[160px]">Tempat, Tgl Lahir</th>
-                  <th className="py-3 px-4 min-w-[160px] text-center">Status Pinjam Buku (Bebas Pustaka)</th>
+                  <th className="py-3 px-4 min-w-[180px]">Alamat & No. KTP</th>
                   <th className="py-3 px-4 min-w-[100px] text-center">Aksi</th>
                 </tr>
               </thead>
@@ -392,7 +386,6 @@ export const AdminDashboard: React.FC = () => {
                     <tr key={u.idUser} className="hover:bg-blue-50/40">
                       <td className="py-3 px-4 align-top">
                         <div className="font-mono font-bold text-slate-900 text-xs">{u.UserName}</div>
-                        <div className="text-[10px] text-slate-400 mt-0.5">KTP: {u.NoKTP}</div>
                       </td>
                       <td className="py-3 px-4 font-bold text-slate-900 text-xs align-top">{u.Nama}</td>
                       <td className="py-3 px-4 align-top">
@@ -407,54 +400,22 @@ export const AdminDashboard: React.FC = () => {
                         </span>
                       </td>
                       <td className="py-3 px-4 text-slate-600 align-top">
+                        {u.JenisKelamin === 1 ? 'Laki-laki' : 'Perempuan'}
+                      </td>
+                      <td className="py-3 px-4 text-slate-600 align-top">
                         <div>{u.TempatLahir}</div>
                         <div className="text-[11px] text-slate-400">{u.TanggalLahir}</div>
                       </td>
-                      {/* Quick Pinjam Counter & Clear */}
-                      <td className="py-3 px-4 text-center align-top">
-                        <div className="inline-flex items-center gap-2 p-1 rounded-xl bg-slate-50 border border-slate-200">
-                          <button
-                            onClick={() => setUserLoan(u.idUser, u.Pinjam - 1)}
-                            disabled={u.Pinjam <= 0}
-                            className="p-1 rounded bg-white hover:bg-slate-200 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed shadow-sm"
-                            title="Kurangi pinjaman 1"
-                          >
-                            <Minus className="w-3 h-3" />
-                          </button>
-
-                          <span
-                            className={`px-2 text-xs font-bold ${
-                              u.Pinjam > 0 ? 'text-amber-700' : 'text-emerald-700'
-                            }`}
-                          >
-                            {u.Pinjam} Buku
-                          </span>
-
-                          <button
-                            onClick={() => setUserLoan(u.idUser, u.Pinjam + 1)}
-                            className="p-1 rounded bg-white hover:bg-slate-200 text-slate-600 shadow-sm"
-                            title="Tambah pinjaman 1"
-                          >
-                            <Plus className="w-3 h-3" />
-                          </button>
-
-                          {u.Pinjam > 0 && (
-                            <button
-                              onClick={() => clearUserLoan(u.idUser)}
-                              className="ml-1 px-2.5 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-sm whitespace-nowrap"
-                              title="Set 0 (Bebas Pustaka Seketika)"
-                            >
-                              Bebaskan
-                            </button>
-                          )}
-                        </div>
+                      <td className="py-3 px-4 text-slate-600 align-top">
+                        <div>{u.Alamat}</div>
+                        <div className="text-[10px] text-slate-400 mt-0.5 font-mono">KTP: {u.NoKTP}</div>
                       </td>
                       <td className="py-3 px-4 text-center align-top">
                         <div className="flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => setEditingUser(u)}
-                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-blue-700"
-                            title="Edit User"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-blue-700 cursor-pointer"
+                            title="Edit Pengguna"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
@@ -464,8 +425,8 @@ export const AdminDashboard: React.FC = () => {
                                 deleteUser(u.idUser);
                               }
                             }}
-                            className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700"
-                            title="Hapus User"
+                            className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 cursor-pointer"
+                            title="Hapus Pengguna"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -486,15 +447,15 @@ export const AdminDashboard: React.FC = () => {
         <div className="rounded-3xl bg-white border border-slate-200 shadow-md shadow-slate-200/50 p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Daftar Pejabat Penandatangan Surat Bebas Pustaka</h3>
+              <h3 className="text-base font-bold text-slate-900">Pejabat Penandatangan Surat Tanda Terima Repositori</h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Pejabat dengan status Aktif akan muncul di opsi pilihan penandatangan saat pencetakan surat.
+                Pejabat berwenang UPA Perpustakaan yang tampil di lembar tanda terima serah berkas skripsi.
               </p>
             </div>
 
             <button
               onClick={() => setIsAddPelaporOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all self-start sm:self-auto"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all self-start sm:self-auto cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Tambah Pejabat Baru</span>
@@ -521,27 +482,21 @@ export const AdminDashboard: React.FC = () => {
                     <td className="py-3 px-4 text-center">
                       <button
                         onClick={() => togglePelaporActive(p.id_pelapor)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all ${
+                        className={`px-3 py-1 rounded-full text-[10px] font-bold border transition-colors cursor-pointer ${
                           p.active === 1
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-slate-100 text-slate-500 border border-slate-200'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : 'bg-slate-100 text-slate-500 border-slate-200'
                         }`}
                       >
-                        {p.active === 1 ? (
-                          <>
-                            <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                            <span>Aktif</span>
-                          </>
-                        ) : (
-                          <span>Nonaktif</span>
-                        )}
+                        {p.active === 1 ? 'Aktif' : 'Nonaktif'}
                       </button>
                     </td>
                     <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1.5">
                         <button
                           onClick={() => setEditingPelapor(p)}
-                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-blue-700"
+                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-blue-700 cursor-pointer"
+                          title="Edit Pejabat"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
@@ -551,7 +506,8 @@ export const AdminDashboard: React.FC = () => {
                               deletePelapor(p.id_pelapor);
                             }
                           }}
-                          className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700"
+                          className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 cursor-pointer"
+                          title="Hapus Pejabat"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -566,24 +522,24 @@ export const AdminDashboard: React.FC = () => {
       )}
 
       {/* ======================================================== */}
-      {/* TAB 4: PENGUMUMAN & PANDUAN (`tulisan`)                  */}
+      {/* TAB 4: PENGUMUMAN & PANDUAN (`tulisan`)                   */}
       {/* ======================================================== */}
       {activeTab === 'tulisan' && (
         <div className="rounded-3xl bg-white border border-slate-200 shadow-md shadow-slate-200/50 p-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Manajemen Pengumuman & Standar Dokumen</h3>
+              <h3 className="text-base font-bold text-slate-900">Panduan & Pengumuman Repositori Skripsi</h3>
               <p className="text-xs text-slate-500 mt-0.5">
-                Konten artikel yang dipublikasikan di halaman beranda dan panduan pemustaka.
+                Kelola artikel panduan teknis penyerahan skripsi dan pengumuman layanan perpustakaan.
               </p>
             </div>
 
             <button
               onClick={() => setIsAddTulisanOpen(true)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all self-start sm:self-auto"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition-all self-start sm:self-auto cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Buat Tulisan Baru</span>
+              <span>Tambah Tulisan Baru</span>
             </button>
           </div>
 
@@ -591,57 +547,50 @@ export const AdminDashboard: React.FC = () => {
             <table className="w-full text-left border-collapse text-xs">
               <thead>
                 <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase text-[10px] font-bold tracking-wider">
+                  <th className="py-3 px-4 min-w-[240px]">Judul Tulisan</th>
+                  <th className="py-3 px-4 min-w-[130px]">Kategori</th>
                   <th className="py-3 px-4 min-w-[100px]">Tanggal</th>
-                  <th className="py-3 px-4 min-w-[320px]">Judul & Isi Pengumuman</th>
-                  <th className="py-3 px-4 min-w-[160px]">Kategori</th>
-                  <th className="py-3 px-4 min-w-[120px] text-center">Status Tayang (1-Klik)</th>
+                  <th className="py-3 px-4 min-w-[110px] text-center">Status Aktif (1-Klik)</th>
                   <th className="py-3 px-4 min-w-[100px] text-center">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {tulisan.map((t) => (
                   <tr key={t.idTulisan} className="hover:bg-blue-50/40">
-                    <td className="py-3 px-4 font-mono text-slate-500 font-medium align-top">{t.TanggalDibuat}</td>
-                    {/* Judul & Isi ditampilkan tanpa potongan clamp yang agresif */}
-                    <td className="py-3 px-4 align-top">
-                      <div className="font-bold text-slate-900 text-sm">{t.Judul}</div>
-                      <div className="text-xs text-slate-600 font-normal mt-1 leading-relaxed break-words">{t.Isi}</div>
+                    <td className="py-3 px-4">
+                      <div className="font-bold text-slate-900 text-xs">{t.Judul}</div>
+                      <div className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">{t.Isi}</div>
                     </td>
-                    <td className="py-3 px-4 align-top">
+                    <td className="py-3 px-4">
                       <span
-                        className={`px-2.5 py-0.5 rounded text-[10px] font-bold border whitespace-nowrap ${
+                        className={`px-2.5 py-0.5 rounded text-[10px] font-bold border ${
                           t.JenisTulisan === 1
                             ? 'bg-blue-50 text-blue-700 border-blue-200'
                             : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                         }`}
                       >
-                        {t.JenisTulisan === 1 ? '1 - Pengumuman Layanan' : '2 - Standar & Panduan'}
+                        {t.JenisTulisan === 1 ? 'Pengumuman Layanan' : 'Standar Dokumen'}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-center align-top">
+                    <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">{t.TanggalDibuat}</td>
+                    <td className="py-3 px-4 text-center">
                       <button
                         onClick={() => toggleTulisanAktif(t.idTulisan)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all whitespace-nowrap ${
+                        className={`px-3 py-1 rounded-full text-[10px] font-bold border transition-colors cursor-pointer ${
                           t.Aktif === 1
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-slate-100 text-slate-500 border border-slate-200'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : 'bg-slate-100 text-slate-500 border-slate-200'
                         }`}
                       >
-                        {t.Aktif === 1 ? (
-                          <>
-                            <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                            <span>Tayang</span>
-                          </>
-                        ) : (
-                          <span>Disembunyikan</span>
-                        )}
+                        {t.Aktif === 1 ? 'Aktif' : 'Nonaktif'}
                       </button>
                     </td>
-                    <td className="py-3 px-4 text-center align-top">
+                    <td className="py-3 px-4 text-center">
                       <div className="flex items-center justify-center gap-1.5">
                         <button
                           onClick={() => setEditingTulisan(t)}
-                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-blue-700"
+                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-blue-700 cursor-pointer"
+                          title="Edit Tulisan"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
@@ -651,7 +600,8 @@ export const AdminDashboard: React.FC = () => {
                               deleteTulisan(t.idTulisan);
                             }
                           }}
-                          className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700"
+                          className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 cursor-pointer"
+                          title="Hapus Tulisan"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -666,83 +616,88 @@ export const AdminDashboard: React.FC = () => {
       )}
 
       {/* ======================================================== */}
-      {/* TAB 5: MASTER DATA                                       */}
+      {/* TAB 5: MASTER DATA (FAKULTAS, JURUSAN, JENIS DOKUMEN)    */}
       {/* ======================================================== */}
       {activeTab === 'master' && (
-        <div className="rounded-3xl bg-white border border-slate-200 shadow-md shadow-slate-200/50 p-6">
-          <div className="flex items-center gap-2 border-b border-slate-200 pb-4 mb-6">
+        <div className="rounded-3xl bg-white border border-slate-200 shadow-md shadow-slate-200/50 p-6 space-y-6">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
             <button
               onClick={() => setMasterSubTab('fakultas')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 masterSubTab === 'fakultas'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:text-slate-900'
               }`}
             >
               Fakultas ({fakultas.length})
             </button>
             <button
               onClick={() => setMasterSubTab('jurusan')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 masterSubTab === 'jurusan'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:text-slate-900'
               }`}
             >
               Jurusan / Program Studi ({jurusan.length})
             </button>
             <button
               onClick={() => setMasterSubTab('jenis')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 masterSubTab === 'jenis'
-                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-slate-100 text-slate-600 hover:text-slate-900'
               }`}
             >
               Jenis Dokumen ({jenisDokumen.length})
             </button>
           </div>
 
-          {/* SubTab 1: Fakultas */}
+          {/* Subtab: FAKULTAS */}
           {masterSubTab === 'fakultas' && (
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-xs text-slate-500 font-medium">Tabel `fakultas` (10 Unit Fakultas di Universitas Riau)</span>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                  Daftar Fakultas Universitas Riau
+                </h4>
                 <button
                   onClick={() => {
                     const name = prompt('Nama Fakultas:');
-                    if (name) {
-                      const ket = prompt('Keterangan singkat:') || '';
-                      addFakultas({ fakultas: name, keterangan: ket });
-                    }
+                    if (!name) return;
+                    const ket = prompt('Keterangan / Singkatan:');
+                    addFakultas({ fakultas: name, keterangan: ket || '' });
                   }}
-                  className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm"
+                  className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  + Tambah Fakultas
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Tambah Fakultas</span>
                 </button>
               </div>
+
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-700">
+                <table className="w-full text-left border-collapse text-xs">
                   <thead>
                     <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase text-[10px] font-bold">
-                      <th className="py-2.5 px-3 min-w-[60px]">ID</th>
+                      <th className="py-2.5 px-3 w-16">ID</th>
                       <th className="py-2.5 px-3 min-w-[200px]">Nama Fakultas</th>
-                      <th className="py-2.5 px-3 min-w-[220px]">Keterangan</th>
-                      <th className="py-2.5 px-3 min-w-[80px] text-center">Aksi</th>
+                      <th className="py-2.5 px-3 min-w-[200px]">Keterangan</th>
+                      <th className="py-2.5 px-3 w-20 text-center">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
                     {fakultas.map((f) => (
-                      <tr key={f.id_fakultas} className="hover:bg-blue-50/30">
-                        <td className="py-2.5 px-3 font-mono text-blue-700 font-bold">{f.id_fakultas}</td>
+                      <tr key={f.id_fakultas} className="hover:bg-slate-50">
+                        <td className="py-2.5 px-3 font-mono text-slate-400">{f.id_fakultas}</td>
                         <td className="py-2.5 px-3 font-bold text-slate-900">{f.fakultas}</td>
-                        <td className="py-2.5 px-3 text-slate-600">{f.keterangan}</td>
+                        <td className="py-2.5 px-3 text-slate-500">{f.keterangan}</td>
                         <td className="py-2.5 px-3 text-center">
                           <button
                             onClick={() => {
-                              if (confirm(`Hapus ${f.fakultas}?`)) deleteFakultas(f.id_fakultas);
+                              if (confirm(`Hapus fakultas ${f.fakultas}?`)) {
+                                deleteFakultas(f.id_fakultas);
+                              }
                             }}
-                            className="p-1 text-rose-600 hover:text-rose-800"
+                            className="p-1 rounded text-rose-600 hover:bg-rose-50 cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -755,51 +710,56 @@ export const AdminDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* SubTab 2: Jurusan */}
+          {/* Subtab: JURUSAN */}
           {masterSubTab === 'jurusan' && (
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-xs text-slate-500 font-medium">Tabel `jurusan` (Program Studi)</span>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                  Daftar Program Studi / Jurusan
+                </h4>
                 <button
                   onClick={() => {
+                    const name = prompt('Nama Program Studi:');
+                    if (!name) return;
                     const fakId = Number(prompt('ID Fakultas (1-10):') || '1');
-                    const jur = prompt('Nama Jurusan/Prodi:');
-                    if (jur) {
-                      const ket = prompt('Keterangan:') || '';
-                      addJurusan({ id_fakultas: fakId, jurusan: jur, keterangan: ket });
-                    }
+                    const ket = prompt('Keterangan:');
+                    addJurusan({ id_fakultas: fakId, jurusan: name, keterangan: ket || '' });
                   }}
-                  className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm"
+                  className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  + Tambah Jurusan
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Tambah Jurusan</span>
                 </button>
               </div>
+
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-700">
+                <table className="w-full text-left border-collapse text-xs">
                   <thead>
                     <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase text-[10px] font-bold">
-                      <th className="py-2.5 px-3 min-w-[60px]">ID</th>
+                      <th className="py-2.5 px-3 w-16">ID</th>
+                      <th className="py-2.5 px-3 min-w-[200px]">Nama Program Studi</th>
                       <th className="py-2.5 px-3 min-w-[180px]">Fakultas</th>
-                      <th className="py-2.5 px-3 min-w-[200px]">Nama Jurusan</th>
-                      <th className="py-2.5 px-3 min-w-[220px]">Keterangan</th>
-                      <th className="py-2.5 px-3 min-w-[80px] text-center">Aksi</th>
+                      <th className="py-2.5 px-3 min-w-[200px]">Keterangan</th>
+                      <th className="py-2.5 px-3 w-20 text-center">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
                     {jurusan.map((j) => {
-                      const parentFak = fakultas.find(f => f.id_fakultas === j.id_fakultas);
+                      const f = fakultas.find((fak) => fak.id_fakultas === j.id_fakultas);
                       return (
-                        <tr key={j.id_jurusan} className="hover:bg-blue-50/30">
-                          <td className="py-2.5 px-3 font-mono text-blue-700 font-bold">{j.id_jurusan}</td>
-                          <td className="py-2.5 px-3 text-slate-600 font-medium">{parentFak?.fakultas || j.id_fakultas}</td>
+                        <tr key={j.id_jurusan} className="hover:bg-slate-50">
+                          <td className="py-2.5 px-3 font-mono text-slate-400">{j.id_jurusan}</td>
                           <td className="py-2.5 px-3 font-bold text-slate-900">{j.jurusan}</td>
+                          <td className="py-2.5 px-3 text-blue-700 font-semibold">{f?.fakultas || '-'}</td>
                           <td className="py-2.5 px-3 text-slate-500">{j.keterangan}</td>
                           <td className="py-2.5 px-3 text-center">
                             <button
                               onClick={() => {
-                                if (confirm(`Hapus ${j.jurusan}?`)) deleteJurusan(j.id_jurusan);
+                                if (confirm(`Hapus jurusan ${j.jurusan}?`)) {
+                                  deleteJurusan(j.id_jurusan);
+                                }
                               }}
-                              className="p-1 text-rose-600 hover:text-rose-800"
+                              className="p-1 rounded text-rose-600 hover:bg-rose-50 cursor-pointer"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -813,46 +773,51 @@ export const AdminDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* SubTab 3: Jenis Dokumen */}
+          {/* Subtab: JENIS DOKUMEN */}
           {masterSubTab === 'jenis' && (
-            <div>
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-xs text-slate-500 font-medium">Tabel `jenis_dokumen`</span>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                  Daftar Jenis Dokumen Karya Ilmiah
+                </h4>
                 <button
                   onClick={() => {
-                    const name = prompt('Nama Jenis Dokumen:');
-                    if (name) {
-                      const ket = prompt('Keterangan:') || '';
-                      addJenisDokumen({ jenis_dokumen: name, keterangan_jenis_dokumen: ket });
-                    }
+                    const name = prompt('Jenis Dokumen (cth: Skripsi, Tesis):');
+                    if (!name) return;
+                    const ket = prompt('Keterangan Jenis Dokumen:');
+                    addJenisDokumen({ jenis_dokumen: name, keterangan_jenis_dokumen: ket || '' });
                   }}
-                  className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm"
+                  className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  + Tambah Jenis Dokumen
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Tambah Jenis Dokumen</span>
                 </button>
               </div>
+
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-700">
+                <table className="w-full text-left border-collapse text-xs">
                   <thead>
                     <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase text-[10px] font-bold">
-                      <th className="py-2.5 px-3 min-w-[60px]">ID</th>
+                      <th className="py-2.5 px-3 w-16">ID</th>
                       <th className="py-2.5 px-3 min-w-[180px]">Jenis Dokumen</th>
-                      <th className="py-2.5 px-3 min-w-[240px]">Keterangan</th>
-                      <th className="py-2.5 px-3 min-w-[80px] text-center">Aksi</th>
+                      <th className="py-2.5 px-3 min-w-[260px]">Keterangan</th>
+                      <th className="py-2.5 px-3 w-20 text-center">Aksi</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
                     {jenisDokumen.map((d) => (
-                      <tr key={d.id_jenis_dokumen} className="hover:bg-blue-50/30">
-                        <td className="py-2.5 px-3 font-mono text-blue-700 font-bold">{d.id_jenis_dokumen}</td>
+                      <tr key={d.id_jenis_dokumen} className="hover:bg-slate-50">
+                        <td className="py-2.5 px-3 font-mono text-slate-400">{d.id_jenis_dokumen}</td>
                         <td className="py-2.5 px-3 font-bold text-slate-900">{d.jenis_dokumen}</td>
-                        <td className="py-2.5 px-3 text-slate-600">{d.keterangan_jenis_dokumen}</td>
+                        <td className="py-2.5 px-3 text-slate-500">{d.keterangan_jenis_dokumen}</td>
                         <td className="py-2.5 px-3 text-center">
                           <button
                             onClick={() => {
-                              if (confirm(`Hapus ${d.jenis_dokumen}?`)) deleteJenisDokumen(d.id_jenis_dokumen);
+                              if (confirm(`Hapus jenis dokumen ${d.jenis_dokumen}?`)) {
+                                deleteJenisDokumen(d.id_jenis_dokumen);
+                              }
                             }}
-                            className="p-1 text-rose-600 hover:text-rose-800"
+                            className="p-1 rounded text-rose-600 hover:bg-rose-50 cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -872,17 +837,17 @@ export const AdminDashboard: React.FC = () => {
       {/* ======================================================== */}
       {(editingSkripsi || isAddSkripsiOpen) && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="relative w-full max-w-xl bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl">
+          <div className="relative w-full max-w-2xl bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <h3 className="text-base font-bold text-slate-900">
-                {editingSkripsi ? 'Edit Data Berkas Skripsi' : 'Tambah Berkas Skripsi Baru'}
+                {editingSkripsi ? 'Edit Data Naskah Skripsi' : 'Tambah Berkas Skripsi Baru'}
               </h3>
               <button
                 onClick={() => {
                   setEditingSkripsi(null);
                   setIsAddSkripsiOpen(false);
                 }}
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -938,16 +903,16 @@ export const AdminDashboard: React.FC = () => {
             >
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Nomor Surat</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Nomor Surat Resmi</label>
                   <input
                     name="no_surat"
-                    defaultValue={editingSkripsi?.no_surat || `0${skripsi.length + 1}/SKR/FT/2024`}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-medium"
+                    defaultValue={editingSkripsi?.no_surat || `00${skripsi.length + 1}/SKR/FT/2026`}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-medium font-mono"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Tanggal</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Tanggal Penyerahan</label>
                   <input
                     type="date"
                     name="tanggal"
@@ -1025,7 +990,7 @@ export const AdminDashboard: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Judul Karya Ilmiah</label>
+                <label className="block text-slate-700 font-semibold mb-1">Judul Lengkap Naskah</label>
                 <textarea
                   name="judul"
                   rows={3}
@@ -1040,10 +1005,10 @@ export const AdminDashboard: React.FC = () => {
                   <input
                     type="checkbox"
                     name="hard_copy"
-                    defaultChecked={editingSkripsi ? editingSkripsi.hard_copy === 1 : false}
-                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    defaultChecked={editingSkripsi ? editingSkripsi.hard_copy === 1 : true}
+                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                   />
-                  <span className="text-slate-700 font-medium">Hardcopy Diserahkan</span>
+                  <span className="text-slate-700 font-semibold">Naskah Hardcopy Fisik Diserahkan</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -1051,9 +1016,9 @@ export const AdminDashboard: React.FC = () => {
                     type="checkbox"
                     name="soft_copy"
                     defaultChecked={editingSkripsi ? editingSkripsi.soft_copy === 1 : true}
-                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                   />
-                  <span className="text-slate-700 font-medium">Softcopy PDF Diserahkan</span>
+                  <span className="text-slate-700 font-semibold">Naskah Softcopy PDF Divalidasi</span>
                 </label>
               </div>
 
@@ -1064,13 +1029,13 @@ export const AdminDashboard: React.FC = () => {
                     setEditingSkripsi(null);
                     setIsAddSkripsiOpen(false);
                   }}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold cursor-pointer"
                 >
                   Simpan Perubahan
                 </button>
@@ -1095,7 +1060,7 @@ export const AdminDashboard: React.FC = () => {
                   setEditingUser(null);
                   setIsAddUserOpen(false);
                 }}
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1108,7 +1073,7 @@ export const AdminDashboard: React.FC = () => {
                 const UserName = formData.get('UserName') as string;
                 const Nama = formData.get('Nama') as string;
                 const JenisUser = Number(formData.get('JenisUser'));
-                const Pinjam = Number(formData.get('Pinjam'));
+                const JenisKelamin = Number(formData.get('JenisKelamin'));
                 const TempatLahir = formData.get('TempatLahir') as string;
                 const TanggalLahir = formData.get('TanggalLahir') as string;
                 const NoKTP = formData.get('NoKTP') as string;
@@ -1119,7 +1084,7 @@ export const AdminDashboard: React.FC = () => {
                     UserName,
                     Nama,
                     JenisUser,
-                    Pinjam,
+                    JenisKelamin,
                     TempatLahir,
                     TanggalLahir,
                     NoKTP,
@@ -1131,13 +1096,13 @@ export const AdminDashboard: React.FC = () => {
                     Password: 'mhs123',
                     Nama,
                     JenisUser,
-                    JenisKelamin: 1,
+                    JenisKelamin,
                     TempatLahir,
                     TanggalLahir,
                     NoKTP,
                     Alamat,
                     foto: 'default.png',
-                    Pinjam,
+                    Pinjam: 0,
                   });
                 }
 
@@ -1157,7 +1122,7 @@ export const AdminDashboard: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Tipe Akun</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Peran Akun</label>
                   <select
                     name="JenisUser"
                     defaultValue={editingUser?.JenisUser || 2}
@@ -1181,17 +1146,18 @@ export const AdminDashboard: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Jumlah Pinjam Buku</label>
-                  <input
-                    type="number"
-                    min="0"
-                    name="Pinjam"
-                    defaultValue={editingUser ? editingUser.Pinjam : 0}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-bold"
-                  />
+                  <label className="block text-slate-700 font-semibold mb-1">Jenis Kelamin</label>
+                  <select
+                    name="JenisKelamin"
+                    defaultValue={editingUser?.JenisKelamin || 1}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-medium"
+                  >
+                    <option value={1}>Laki-laki</option>
+                    <option value={2}>Perempuan</option>
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Nomor KTP / Identitas</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Nomor KTP / NIK</label>
                   <input
                     name="NoKTP"
                     defaultValue={editingUser?.NoKTP || ''}
@@ -1221,7 +1187,7 @@ export const AdminDashboard: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Alamat</label>
+                <label className="block text-slate-700 font-semibold mb-1">Alamat Lengkap</label>
                 <input
                   name="Alamat"
                   defaultValue={editingUser?.Alamat || 'Pekanbaru, Riau'}
@@ -1236,13 +1202,13 @@ export const AdminDashboard: React.FC = () => {
                     setEditingUser(null);
                     setIsAddUserOpen(false);
                   }}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold cursor-pointer"
                 >
                   Simpan Pengguna
                 </button>
@@ -1253,7 +1219,7 @@ export const AdminDashboard: React.FC = () => {
       )}
 
       {/* ======================================================== */}
-      {/* MODAL: ADD / EDIT PELAPOR (SIGNATORIES)                   */}
+      {/* MODAL: ADD / EDIT PELAPOR                                */}
       {/* ======================================================== */}
       {(editingPelapor || isAddPelaporOpen) && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
@@ -1267,7 +1233,7 @@ export const AdminDashboard: React.FC = () => {
                   setEditingPelapor(null);
                   setIsAddPelaporOpen(false);
                 }}
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1306,21 +1272,21 @@ export const AdminDashboard: React.FC = () => {
               className="mt-4 space-y-3.5 text-xs"
             >
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Nama Pejabat (Lengkap Gelar)</label>
+                <label className="block text-slate-700 font-semibold mb-1">Nama Lengkap & Gelar</label>
                 <input
                   name="nama_pelapor"
                   defaultValue={editingPelapor?.nama_pelapor || ''}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-semibold"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-bold"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">NIP Pejabat</label>
+                <label className="block text-slate-700 font-semibold mb-1">NIP (Nomor Induk Pegawai)</label>
                 <input
                   name="nip_pelapor"
                   defaultValue={editingPelapor?.nip_pelapor || ''}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-mono font-bold"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-mono font-medium"
                   required
                 />
               </div>
@@ -1329,21 +1295,22 @@ export const AdminDashboard: React.FC = () => {
                 <label className="block text-slate-700 font-semibold mb-1">Jabatan Resmi</label>
                 <input
                   name="jabatan_pelapor"
-                  defaultValue={editingPelapor?.jabatan_pelapor || ''}
+                  defaultValue={editingPelapor?.jabatan_pelapor || 'Pustakawan Repositori'}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-medium"
                   required
                 />
               </div>
 
-              <div className="py-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="active"
-                    defaultChecked={editingPelapor ? editingPelapor.active === 1 : true}
-                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-slate-700 font-medium">Status Aktif Sebagai Penandatangan Surat</span>
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="active_check"
+                  name="active"
+                  defaultChecked={editingPelapor ? editingPelapor.active === 1 : true}
+                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                <label htmlFor="active_check" className="text-slate-700 font-semibold cursor-pointer">
+                  Aktifkan sebagai Pejabat Penandatangan Sah
                 </label>
               </div>
 
@@ -1354,13 +1321,13 @@ export const AdminDashboard: React.FC = () => {
                     setEditingPelapor(null);
                     setIsAddPelaporOpen(false);
                   }}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold cursor-pointer"
                 >
                   Simpan Pejabat
                 </button>
@@ -1371,21 +1338,21 @@ export const AdminDashboard: React.FC = () => {
       )}
 
       {/* ======================================================== */}
-      {/* MODAL: ADD / EDIT TULISAN (PENGUMUMAN)                   */}
+      {/* MODAL: ADD / EDIT TULISAN                                */}
       {/* ======================================================== */}
       {(editingTulisan || isAddTulisanOpen) && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="relative w-full max-w-lg bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <h3 className="text-base font-bold text-slate-900">
-                {editingTulisan ? 'Edit Artikel Tulisan' : 'Buat Tulisan / Pengumuman Baru'}
+                {editingTulisan ? 'Edit Artikel / Panduan' : 'Tambah Tulisan Baru'}
               </h3>
               <button
                 onClick={() => {
                   setEditingTulisan(null);
                   setIsAddTulisanOpen(false);
                 }}
-                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800"
+                className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1399,7 +1366,8 @@ export const AdminDashboard: React.FC = () => {
                 const Isi = formData.get('Isi') as string;
                 const JenisTulisan = Number(formData.get('JenisTulisan'));
                 const Aktif = formData.get('Aktif') === 'on' ? 1 : 0;
-                const TanggalDibuat = (formData.get('TanggalDibuat') as string) || new Date().toISOString().split('T')[0];
+                const TanggalDibuat =
+                  (formData.get('TanggalDibuat') as string) || new Date().toISOString().split('T')[0];
 
                 if (editingTulisan) {
                   updateTulisan(editingTulisan.idTulisan, {
@@ -1424,6 +1392,16 @@ export const AdminDashboard: React.FC = () => {
               }}
               className="mt-4 space-y-3.5 text-xs"
             >
+              <div>
+                <label className="block text-slate-700 font-semibold mb-1">Judul Artikel / Panduan</label>
+                <input
+                  name="Judul"
+                  defaultValue={editingTulisan?.Judul || ''}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-bold"
+                  required
+                />
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-700 font-semibold mb-1">Kategori Tulisan</label>
@@ -1432,34 +1410,23 @@ export const AdminDashboard: React.FC = () => {
                     defaultValue={editingTulisan?.JenisTulisan || 1}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-medium"
                   >
-                    <option value={1}>1 - Pengumuman Layanan</option>
-                    <option value={2}>2 - Panduan & Standar Dokumen</option>
+                    <option value={1}>Pengumuman Layanan</option>
+                    <option value={2}>Standar Format Dokumen</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Tanggal Publikasi</label>
+                  <label className="block text-slate-700 font-semibold mb-1">Tanggal Dibuat</label>
                   <input
                     type="date"
                     name="TanggalDibuat"
                     defaultValue={editingTulisan?.TanggalDibuat || new Date().toISOString().split('T')[0]}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-medium"
-                    required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Judul Pengumuman</label>
-                <input
-                  name="Judul"
-                  defaultValue={editingTulisan?.Judul || ''}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-900 font-semibold"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-slate-700 font-semibold mb-1">Isi Lengkap Konten</label>
+                <label className="block text-slate-700 font-semibold mb-1">Isi Lengkap</label>
                 <textarea
                   name="Isi"
                   rows={5}
@@ -1469,15 +1436,16 @@ export const AdminDashboard: React.FC = () => {
                 />
               </div>
 
-              <div className="py-1">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="Aktif"
-                    defaultChecked={editingTulisan ? editingTulisan.Aktif === 1 : true}
-                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-slate-700 font-medium">Tayang di Halaman Publik</span>
+              <div className="flex items-center gap-2 pt-1">
+                <input
+                  type="checkbox"
+                  id="aktif_tulisan_check"
+                  name="Aktif"
+                  defaultChecked={editingTulisan ? editingTulisan.Aktif === 1 : true}
+                  className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                <label htmlFor="aktif_tulisan_check" className="text-slate-700 font-semibold cursor-pointer">
+                  Tampilkan di Portal Publik
                 </label>
               </div>
 
@@ -1488,13 +1456,13 @@ export const AdminDashboard: React.FC = () => {
                     setEditingTulisan(null);
                     setIsAddTulisanOpen(false);
                   }}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold cursor-pointer"
                 >
                   Simpan Tulisan
                 </button>
@@ -1504,7 +1472,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Print Certificate Modal for Previewing directly from Admin */}
+      {/* Preview Modal Cetak A4 */}
       {previewSkripsiPrint && (
         <PrintCertificateModal
           skripsiItem={previewSkripsiPrint}

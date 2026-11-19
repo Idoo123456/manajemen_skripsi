@@ -23,11 +23,11 @@ export const GuidesView: React.FC = () => {
             <span>Pedoman & Standarisasi Dokumen Repositori</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Panduan Penyerahan Skripsi & Bebas Pustaka
+            Panduan Penyerahan Naskah Skripsi & Tugas Akhir
           </h2>
           <p className="mt-3 text-sm text-slate-600 leading-relaxed">
             Petunjuk teknis resmi bagi mahasiswa jenjang Diploma, Sarjana, Magister, dan Doktoral Universitas Riau
-            dalam mempersiapkan naskah karya ilmiah bebas plagiasi.
+            dalam penyerahan naskah hardcopy fisik dan softcopy digital ke UPA Perpustakaan.
           </p>
         </div>
       </ScrollReveal>
@@ -49,9 +49,9 @@ export const GuidesView: React.FC = () => {
         <ScrollReveal delay={150} direction="up">
           <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-md shadow-slate-200/50 hover:border-sky-400 hover:shadow-xl transition-all h-full">
             <div className="text-3xl font-black text-sky-200 mb-2 font-mono">02</div>
-            <h3 className="text-base font-bold text-slate-900 mb-2">Uji Turnitin & Format</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-2">Format PDF & Turnitin</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Memastikan skor similaritas Turnitin maksimal 25% serta memisahkan file PDF sesuai standar repositori (cover, abstrak, bab utuh).
+              Memastikan skor similaritas Turnitin maksimal 25% serta menyiapkan file PDF naskah lengkap (cover, lembar pengesahan, abstrak, BAB I-V, lampiran).
             </p>
           </div>
         </ScrollReveal>
@@ -60,9 +60,9 @@ export const GuidesView: React.FC = () => {
         <ScrollReveal delay={250} direction="up">
           <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-md shadow-slate-200/50 hover:border-indigo-400 hover:shadow-xl transition-all h-full">
             <div className="text-3xl font-black text-indigo-200 mb-2 font-mono">03</div>
-            <h3 className="text-base font-bold text-slate-900 mb-2">Pelunasan Pinjaman</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-2">Penyerahan Hardcopy</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Mengembalikan seluruh koleksi buku fisik yang pernah dipinjam dari perpustakaan pusat maupun fakultas (Status Pinjam: 0).
+              Menyerahkan buku fisik naskah skripsi jilid resmi dengan warna sampul sesuai fakultas masing-masing ke loket UPA Perpustakaan.
             </p>
           </div>
         </ScrollReveal>
@@ -71,9 +71,9 @@ export const GuidesView: React.FC = () => {
         <ScrollReveal delay={350} direction="up">
           <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-md shadow-slate-200/50 hover:border-emerald-400 hover:shadow-xl transition-all h-full">
             <div className="text-3xl font-black text-emerald-200 mb-2 font-mono">04</div>
-            <h3 className="text-base font-bold text-slate-900 mb-2">Penerbitan Surat</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-2">Penerbitan Tanda Terima</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Pustakawan menerbitkan Surat Keterangan Penyerahan & Bebas Pustaka resmi ber-QR Code untuk syarat pendaftaran wisuda.
+              Pustakawan menerbitkan Surat Tanda Terima Penyerahan Skripsi resmi ber-QR Code untuk kelengkapan berkas pendaftaran yudisium dan wisuda.
             </p>
           </div>
         </ScrollReveal>
@@ -118,10 +118,10 @@ export const GuidesView: React.FC = () => {
       <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-r from-blue-900 via-blue-800 to-sky-700 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
         <div>
           <h3 className="text-xl sm:text-2xl font-extrabold text-white">
-            Sudah Memenuhi Syarat & Ingin Mengajukan?
+            Sudah Mempersiapkan Naskah & Ingin Mengajukan?
           </h3>
           <p className="text-xs sm:text-sm text-blue-100 mt-1.5 max-w-xl">
-            Akses langsung Portal Mahasiswa untuk memeriksa status peminjaman buku, mendaftarkan karya ilmiah, dan mencetak surat keterangan bebas pustaka Anda.
+            Akses langsung Portal Mahasiswa untuk mendaftarkan naskah karya ilmiah, mengunggah berkas softcopy PDF, dan mencetak bukti tanda terima penyerahan skripsi Anda.
           </p>
         </div>
 
@@ -130,7 +130,7 @@ export const GuidesView: React.FC = () => {
           className="shrink-0 flex items-center gap-2 px-6 py-3 rounded-2xl bg-white text-blue-900 hover:bg-blue-50 font-bold text-xs shadow-lg shadow-black/10 transition-all cursor-pointer"
         >
           <GraduationCap className="w-4 h-4 text-blue-700" />
-          <span>Isi Formulir Bebas Pustaka</span>
+          <span>Isi Formulir Penyerahan Skripsi</span>
         </button>
       </div>
     </div>

@@ -48,26 +48,72 @@ export const INITIAL_PELAPOR: Pelapor[] = [
   { id_pelapor: 6, nama_pelapor: 'Dewi Sartika, S.Hum.', nip_pelapor: '198904102014032002', jabatan_pelapor: 'Pustakawan Pengolahan', ttd_url: 'ttd_dewi.png', ttd_file_name: 'ttd_dewi.png', active: 1 },
   { id_pelapor: 7, nama_pelapor: 'Faisal Akbar, S.T.', nip_pelapor: '199207082019031005', jabatan_pelapor: 'Teknisi Sistem Informasi', ttd_url: 'ttd_faisal.png', ttd_file_name: 'ttd_faisal.png', active: 1 },
   { id_pelapor: 8, nama_pelapor: 'Yuliana Sari, S.Pd.', nip_pelapor: '198603252009022004', jabatan_pelapor: 'Pustakawan Referensi', ttd_url: 'ttd_yuliana.png', ttd_file_name: 'ttd_yuliana.png', active: 1 },
-  { id_pelapor: 9, nama_pelapor: 'Agus Setiawan, S.IP.', nip_pelapor: '198112052006041003', jabatan_pelapor: 'Verifikator Bebas Pustaka', ttd_url: 'ttd_agus.png', ttd_file_name: 'ttd_agus.png', active: 1 },
+  { id_pelapor: 9, nama_pelapor: 'Agus Setiawan, S.IP.', nip_pelapor: '198112052006041003', jabatan_pelapor: 'Pustakawan Verifikator Naskah', ttd_url: 'ttd_agus.png', ttd_file_name: 'ttd_agus.png', active: 1 },
   { id_pelapor: 10, nama_pelapor: 'Fitri Ramadhani, S.Sos.', nip_pelapor: '199302142020122006', jabatan_pelapor: 'Sekretariat Repositori', ttd_url: 'ttd_fitri.png', ttd_file_name: 'ttd_fitri.png', active: 1 },
 ];
 
-export const INITIAL_SKRIPSI: Skripsi[] = [];
+export const INITIAL_SKRIPSI: Skripsi[] = [
+  {
+    id_skripsi: 1,
+    id_jenis_dokumen: 1,
+    no_surat: '001/SKR/FT/2026',
+    nama: 'Muhammad Rizki Pratama',
+    nim: '2007111001',
+    email: 'm.rizki.pratama@student.unri.ac.id',
+    email_sent_at: '2026-02-10 10:15',
+    id_fakultas: 1,
+    id_jurusan: 1,
+    judul: 'Rancang Bangun Sistem Informasi Repositori Skripsi Berbasis Web Menggunakan React dan Node.js',
+    hard_copy: 1,
+    soft_copy: 1,
+    tanggal: '2026-02-10'
+  },
+  {
+    id_skripsi: 2,
+    id_jenis_dokumen: 1,
+    no_surat: '002/SKR/FMIPA/2026',
+    nama: 'Siti Nurhaliza',
+    nim: '2007111002',
+    email: 'siti.nurhaliza@student.unri.ac.id',
+    email_sent_at: '2026-02-12 14:30',
+    id_fakultas: 2,
+    id_jurusan: 4,
+    judul: 'Penerapan Algoritma K-Means Clustering dalam Pemetaan Minat Riset Tugas Akhir Mahasiswa',
+    hard_copy: 1,
+    soft_copy: 1,
+    tanggal: '2026-02-12'
+  },
+  {
+    id_skripsi: 3,
+    id_jenis_dokumen: 1,
+    no_surat: '003/SKR/FT/2026',
+    nama: 'Ahmad Fadillah',
+    nim: '2007122003',
+    email: 'ahmad.fadillah@student.unri.ac.id',
+    email_sent_at: null,
+    id_fakultas: 1,
+    id_jurusan: 2,
+    judul: 'Implementasi Internet of Things (IoT) untuk Monitoring Kualitas Daya Listrik Berbasis Mikrokontroler',
+    hard_copy: 1,
+    soft_copy: 0,
+    tanggal: '2026-02-15'
+  }
+];
 
 export const INITIAL_TULISAN: Tulisan[] = [
   {
     idTulisan: 1,
     TanggalDibuat: '2024-08-01',
     Judul: 'Alur Penyerahan Hardcopy & Softcopy Skripsi',
-    Isi: 'Mahasiswa yang telah selesai ujian sidang dan revisi wajib menyerahkan dokumen skripsi hardcopy dan softcopy PDF ke bagian pengolahan UPA Perpustakaan Universitas Riau. Pastikan lembar pengesahan telah ditandatangani lengkap oleh dewan penguji dan pembimbing.',
+    Isi: 'Mahasiswa yang telah selesai ujian sidang dan revisi wajib menyerahkan dokumen skripsi hardcopy jilid resmi dan softcopy PDF naskah lengkap ke bagian pengolahan UPA Perpustakaan Universitas Riau. Pastikan lembar pengesahan telah ditandatangani lengkap oleh dewan pembimbing dan penguji.',
     Aktif: 1,
     JenisTulisan: 1
   },
   {
     idTulisan: 2,
     TanggalDibuat: '2024-08-05',
-    Judul: 'Panduan Bebas Pustaka Online Mahasiswa',
-    Isi: 'Surat keterangan bebas pustaka dapat diproses secara daring setelah verifikasi kelengkapan berkas skripsi disetujui dan mahasiswa tidak memiliki tunggakan peminjaman buku perpustakaan. Surat ini diterbitkan dengan QR Code verifikasi resmi.',
+    Judul: 'Pedoman Validasi Naskah & Penerbitan Tanda Terima Repositori',
+    Isi: 'Surat tanda terima penyerahan naskah skripsi diterbitkan secara resmi setelah verifikasi kelengkapan berkas softcopy PDF dan naskah fisik disetujui pustakawan. Surat ini dilengkapi dengan QR Code otentikasi digital sebagai syarat pendaftaran yudisium.',
     Aktif: 1,
     JenisTulisan: 1
   },
@@ -75,14 +121,14 @@ export const INITIAL_TULISAN: Tulisan[] = [
     idTulisan: 3,
     TanggalDibuat: '2024-08-10',
     Judul: 'Standar Format Dokumen Skripsi & Tugas Akhir',
-    Isi: 'Format berkas softcopy harus memuat cover, abstrak bahasa Indonesia dan Inggris, bab 1 pendahuluan sampai penutup serta daftar pustaka dalam berkas PDF utuh dan file terpisah sesuai petunjuk teknis repositori institusi.',
+    Isi: 'Format berkas softcopy harus memuat halaman cover, abstrak bahasa Indonesia dan Inggris, bab 1 pendahuluan sampai penutup serta daftar pustaka dalam berkas PDF utuh dan file terpisah sesuai petunjuk teknis repositori institusi.',
     Aktif: 1,
     JenisTulisan: 2
   },
   {
     idTulisan: 4,
     TanggalDibuat: '2024-08-15',
-    Judul: 'Jam Layanan Verifikasi Skripsi Semester Genap',
+    Judul: 'Jam Layanan Verifikasi Skripsi Semester Berjalan',
     Isi: 'Layanan verifikasi berkas tugas akhir dibuka setiap hari kerja Senin sampai Jumat pukul 08.30 - 15.30 WIB di Ruang Repositori Digital Lantai 2 Gedung UPA Perpustakaan Universitas Riau.',
     Aktif: 1,
     JenisTulisan: 1
@@ -90,48 +136,48 @@ export const INITIAL_TULISAN: Tulisan[] = [
   {
     idTulisan: 5,
     TanggalDibuat: '2024-08-20',
-    Judul: 'Sosialisasi Pengecekan Similaritas Turnitin',
-    Isi: 'Perpustakaan memfasilitasi uji similaritas karya ilmiah mahasiswa maksimal 25% sesuai standar regulasi akademik kampus. Bukti cek similarity wajib disertakan dalam berkas lampiran penyerahan skripsi.',
+    Judul: 'Sosialisasi Pengecekan Similaritas Turnitin Naskah Skripsi',
+    Isi: 'Perpustakaan memfasilitasi uji similaritas karya ilmiah mahasiswa dengan ambang batas kemiripan maksimal 25% sesuai standar regulasi akademik kampus. Bukti cek similarity wajib disertakan dalam berkas lampiran penyerahan skripsi.',
     Aktif: 1,
     JenisTulisan: 2
   },
   {
     idTulisan: 6,
     TanggalDibuat: '2024-08-25',
-    Judul: 'Integrasi Data Repository dan Dashboard Digital',
-    Isi: 'Sistem pelaporan skripsi kini terkoneksi langsung secara realtime dengan Dashboard Informasi Publik UPA Perpustakaan untuk mempercepat proses penerbitan surat bebas pustaka menjelang wisuda.',
+    Judul: 'Integrasi Data E-Repository Tugas Akhir Mahasiswa',
+    Isi: 'Sistem penyerahan skripsi kini terkoneksi langsung secara daring dengan E-Repository UPA Perpustakaan untuk memudahkan pengindeksan metadata dan penerbitan bukti serah terima karya ilmiah mahasiswa.',
     Aktif: 1,
     JenisTulisan: 1
   },
   {
     idTulisan: 7,
     TanggalDibuat: '2024-09-01',
-    Judul: 'Batas Akhir Penyerahan Dokumen Wisuda Periode Ini',
-    Isi: 'Batas akhir unggah mandiri dan pengesahan bebas pustaka untuk periode wisuda terdekat adalah tanggal 25 bulan berjalan. Mohon segera menyelesaikan sebelum batas waktu penutupan sistem.',
+    Judul: 'Batas Akhir Penyerahan Berkas Skripsi Periode Yudisium',
+    Isi: 'Batas akhir unggah mandiri dan pengesahan berkas penyerahan skripsi untuk periode yudisium terdekat adalah tanggal 25 bulan berjalan. Mohon segera menyelesaikan sebelum batas waktu penutupan loket layanan.',
     Aktif: 1,
     JenisTulisan: 1
   },
   {
     idTulisan: 8,
     TanggalDibuat: '2024-09-05',
-    Judul: 'Akses Referensi E-Journal & E-Book Kampus',
-    Isi: 'Mahasiswa aktif dapat mengakses ribuan jurnal ilmiah bereputasi nasional dan internasional melalui portal resmi e-resources UPA Perpustakaan menggunakan akun Single Sign-On (SSO).',
+    Judul: 'Akses Referensi E-Journal & E-Book Pendukung Skripsi',
+    Isi: 'Mahasiswa aktif tingkat akhir dapat mengakses ribuan jurnal ilmiah bereputasi nasional dan internasional melalui portal e-resources UPA Perpustakaan menggunakan akun Single Sign-On (SSO).',
     Aktif: 1,
     JenisTulisan: 2
   },
   {
     idTulisan: 9,
     TanggalDibuat: '2024-09-10',
-    Judul: 'Layanan Bimbingan Sitasi dan Reference Manager',
-    Isi: 'Pustakawan menyediakan sesi konsultasi penggunaan Mendeley, Zotero, dan EndNote untuk penulisan sitasi serta konsistensi format daftar pustaka karya ilmiah.',
+    Judul: 'Layanan Bimbingan Sitasi dan Reference Manager Mendeley',
+    Isi: 'Pustakawan menyediakan sesi konsultasi penggunaan Mendeley, Zotero, dan EndNote untuk penulisan sitasi serta konsistensi format daftar pustaka karya ilmiah mahasiswa.',
     Aktif: 1,
     JenisTulisan: 2
   },
   {
     idTulisan: 10,
     TanggalDibuat: '2024-09-15',
-    Judul: 'Apresiasi Pengumpulan Karya Ilmiah Mahasiswa',
-    Isi: 'UPA Perpustakaan mengapresiasi mahasiswa yang mengumpulkan dokumen skripsi secara lengkap dan tepat waktu guna mendukung pemeringkatan repository universitas.',
+    Judul: 'Apresiasi Pengumpulan Karya Ilmiah Mahasiswa Berprestasi',
+    Isi: 'UPA Perpustakaan mengapresiasi mahasiswa yang mengumpulkan dokumen skripsi secara lengkap dan tepat waktu guna mendukung pemeringkatan repository institusi.',
     Aktif: 1,
     JenisTulisan: 1
   }
@@ -165,7 +211,7 @@ export const INITIAL_USERS: User[] = [
     Alamat: 'Jl. Bina Widya Simpang Baru Pekanbaru',
     NoKTP: '1471021501020002',
     foto: 'default.png',
-    Pinjam: 1 // Masih pinjam 1 buku!
+    Pinjam: 0
   },
   {
     idUser: 3,
@@ -180,7 +226,7 @@ export const INITIAL_USERS: User[] = [
     Alamat: 'Jl. Manyar Sakti No 15 Pekanbaru',
     NoKTP: '1472015004020003',
     foto: 'default.png',
-    Pinjam: 0 // Bebas pustaka siap!
+    Pinjam: 0
   },
   {
     idUser: 4,
@@ -188,13 +234,14 @@ export const INITIAL_USERS: User[] = [
     UserName: '2007122003',
     Password: 'mhs123',
     Nama: 'Ahmad Fadillah',
+    email: 'ahmad.fadillah@student.unri.ac.id',
     JenisKelamin: 1,
     TempatLahir: 'Bangkinang',
     TanggalLahir: '2001-08-20',
     Alamat: 'Jl. Garuda Sakti Km 2 Pekanbaru',
     NoKTP: '1401032008010004',
     foto: 'default.png',
-    Pinjam: 2
+    Pinjam: 0
   },
   {
     idUser: 5,
@@ -202,6 +249,7 @@ export const INITIAL_USERS: User[] = [
     UserName: '2007122004',
     Password: 'mhs123',
     Nama: 'Dewi Anggraini',
+    email: 'dewi.anggraini@student.unri.ac.id',
     JenisKelamin: 2,
     TempatLahir: 'Rengat',
     TanggalLahir: '2002-11-05',
@@ -216,13 +264,14 @@ export const INITIAL_USERS: User[] = [
     UserName: '2007133005',
     Password: 'mhs123',
     Nama: 'Budi Santoso',
+    email: 'budi.santoso@student.unri.ac.id',
     JenisKelamin: 1,
     TempatLahir: 'Duri',
     TanggalLahir: '2001-03-30',
     Alamat: 'Jl. Kertama Marpoyan Damai',
     NoKTP: '1403043003010006',
     foto: 'default.png',
-    Pinjam: 1
+    Pinjam: 0
   },
   {
     idUser: 7,
@@ -230,6 +279,7 @@ export const INITIAL_USERS: User[] = [
     UserName: '2007133006',
     Password: 'mhs123',
     Nama: 'Putri Ayu Wandira',
+    email: 'putri.wandira@student.unri.ac.id',
     JenisKelamin: 2,
     TempatLahir: 'Siak',
     TanggalLahir: '2002-07-14',
@@ -244,6 +294,7 @@ export const INITIAL_USERS: User[] = [
     UserName: '2007144007',
     Password: 'mhs123',
     Nama: 'Rian Hidayat',
+    email: 'rian.hidayat@student.unri.ac.id',
     JenisKelamin: 1,
     TempatLahir: 'Tembilahan',
     TanggalLahir: '2001-12-25',
@@ -258,13 +309,14 @@ export const INITIAL_USERS: User[] = [
     UserName: '2007155008',
     Password: 'mhs123',
     Nama: 'Nabila Maharani',
+    email: 'nabila.maharani@student.unri.ac.id',
     JenisKelamin: 2,
     TempatLahir: 'Bengkalis',
     TanggalLahir: '2002-09-09',
     Alamat: 'Jl. Melati Panam Pekanbaru',
     NoKTP: '1403014909020009',
     foto: 'default.png',
-    Pinjam: 1
+    Pinjam: 0
   },
   {
     idUser: 10,
@@ -272,6 +324,7 @@ export const INITIAL_USERS: User[] = [
     UserName: '2107111009',
     Password: 'mhs123',
     Nama: 'Fajar Ramadhan',
+    email: 'fajar.ramadhan@student.unri.ac.id',
     JenisKelamin: 1,
     TempatLahir: 'Pekanbaru',
     TanggalLahir: '2003-02-18',

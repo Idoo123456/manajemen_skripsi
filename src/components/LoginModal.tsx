@@ -30,12 +30,12 @@ export const LoginModal: React.FC = () => {
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900">Masuk Akun Pengguna</h3>
-              <p className="text-xs text-slate-500">Portal SIM Skripsi & Bebas Pustaka</p>
+              <p className="text-xs text-slate-500">Portal SIM-SKRIPSI Universitas Riau</p>
             </div>
           </div>
           <button
             onClick={() => setIsLoginModalOpen(false)}
-            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors"
+            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -81,7 +81,7 @@ export const LoginModal: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-700 to-sky-600 hover:from-blue-600 hover:to-sky-500 text-white font-bold shadow-md shadow-blue-500/20 transition-all text-xs"
+            className="w-full py-2.5 px-4 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold shadow-md shadow-blue-700/20 transition-all text-xs cursor-pointer"
           >
             Masuk Sekarang
           </button>
@@ -90,7 +90,7 @@ export const LoginModal: React.FC = () => {
         {/* Quick Demo Credentials shortcut */}
         <div className="mt-6 pt-4 border-t border-slate-100">
           <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 text-center">
-            Atau Pilih Akun Demo Instan (1-Klik):
+            Pilihan Akun Cepat:
           </div>
           <div className="grid grid-cols-2 gap-2">
             <button
@@ -98,13 +98,13 @@ export const LoginModal: React.FC = () => {
                 quickSwitchUser('siti');
                 setIsLoginModalOpen(false);
               }}
-              className="p-2.5 rounded-xl bg-blue-50/70 border border-blue-200 hover:bg-blue-100 text-left transition-all group"
+              className="p-2.5 rounded-xl bg-blue-50/70 border border-blue-200 hover:bg-blue-100 text-left transition-all group cursor-pointer"
             >
               <div className="flex items-center gap-1.5 font-bold text-blue-900 text-xs">
                 <GraduationCap className="w-3.5 h-3.5 text-blue-600" />
                 <span>Siti Nurhaliza</span>
               </div>
-              <div className="text-[10px] text-emerald-700 font-semibold mt-0.5">Bebas Pustaka (Pinjam: 0)</div>
+              <div className="text-[10px] text-slate-600 font-medium mt-0.5">Sistem Informasi (FMIPA)</div>
             </button>
 
             <button
@@ -112,13 +112,13 @@ export const LoginModal: React.FC = () => {
                 quickSwitchUser('rizki');
                 setIsLoginModalOpen(false);
               }}
-              className="p-2.5 rounded-xl bg-amber-50/70 border border-amber-200 hover:bg-amber-100 text-left transition-all group"
+              className="p-2.5 rounded-xl bg-sky-50/70 border border-sky-200 hover:bg-sky-100 text-left transition-all group cursor-pointer"
             >
-              <div className="flex items-center gap-1.5 font-bold text-amber-900 text-xs">
-                <GraduationCap className="w-3.5 h-3.5 text-amber-600" />
+              <div className="flex items-center gap-1.5 font-bold text-sky-900 text-xs">
+                <GraduationCap className="w-3.5 h-3.5 text-sky-600" />
                 <span>M. Rizki</span>
               </div>
-              <div className="text-[10px] text-amber-700 font-semibold mt-0.5">Ada Pinjaman (Pinjam: 1)</div>
+              <div className="text-[10px] text-slate-600 font-medium mt-0.5">Teknik Informatika (FT)</div>
             </button>
           </div>
 
@@ -127,9 +127,9 @@ export const LoginModal: React.FC = () => {
               quickSwitchUser('admin');
               setIsLoginModalOpen(false);
             }}
-            className="mt-2 w-full p-2.5 rounded-xl bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 flex items-center justify-center gap-2 text-indigo-900 font-bold text-xs transition-all"
+            className="mt-2 w-full p-2.5 rounded-xl bg-slate-100 border border-slate-200 hover:bg-slate-200 flex items-center justify-center gap-2 text-slate-800 font-bold text-xs transition-all cursor-pointer"
           >
-            <Shield className="w-3.5 h-3.5 text-indigo-600" />
+            <Shield className="w-3.5 h-3.5 text-blue-700" />
             <span>Masuk Sebagai Administrator (admin / admin123)</span>
           </button>
         </div>

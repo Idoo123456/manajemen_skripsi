@@ -33,8 +33,8 @@ export interface Skripsi {
   no_surat: string | null;
   nama: string;
   nim: string;
-  email?: string; // Email Gmail mahasiswa penerima surat
-  email_sent_at?: string | null; // Timestamp pengiriman ke Gmail
+  email?: string;
+  email_sent_at?: string | null;
   id_fakultas: number;
   id_jurusan: number;
   judul: string;
@@ -58,14 +58,14 @@ export interface User {
   UserName: string;  // NIP / NIM / Username
   Password?: string;
   Nama: string;
-  email?: string;    // Gmail mahasiswa
+  email?: string;
   JenisKelamin: number; // 1 = Laki-laki, 2 = Perempuan
   TempatLahir: string;
   TanggalLahir: string;
   Alamat: string;
   NoKTP: string;
   foto: string;
-  Pinjam: number; // Jumlah buku yang masih dipinjam
+  Pinjam?: number;
 }
 
 // Helper views

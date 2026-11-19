@@ -315,7 +315,7 @@ export const RepositoryTable: React.FC<RepositoryTableProps> = ({
                     </p>
                     <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
                       {skripsi.length === 0
-                        ? 'Belum ada karya ilmiah yang terdaftar di repositori. Ajukan berkas tugas akhir Anda melalui Formulir Bebas Pustaka untuk mulai mengisi repositori.'
+                        ? 'Belum ada karya ilmiah yang terdaftar di repositori. Ajukan berkas tugas akhir Anda melalui Formulir Penyerahan Skripsi untuk mulai mengisi repositori.'
                         : 'Coba ubah kata kunci pencarian atau sesuaikan filter fakultas/jurusan.'}
                     </p>
                     {skripsi.length === 0 && (
@@ -420,7 +420,7 @@ export const RepositoryTable: React.FC<RepositoryTableProps> = ({
                               ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/20'
                               : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'
                           }`}
-                          title="Lihat Format Surat Keterangan / Bebas Pustaka"
+                          title="Lihat Pratinjau Tanda Terima Penyerahan Skripsi"
                         >
                           <Printer className="w-3.5 h-3.5 shrink-0" />
                           <span>Lihat</span>

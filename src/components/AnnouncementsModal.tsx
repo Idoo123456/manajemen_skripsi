@@ -55,7 +55,7 @@ export const AnnouncementsModal: React.FC = () => {
             </div>
             <p>
               Informasi ini berlaku resmi untuk seluruh mahasiswa Universitas Riau yang sedang mengurus
-              persyaratan yudisium dan bebas pustaka. Hubungi pustakawan repositori jika membutuhkan panduan lebih lanjut.
+              persyaratan penyerahan naskah skripsi dan yudisium. Hubungi pustakawan repositori jika membutuhkan panduan lebih lanjut.
             </p>
           </div>
         </div>

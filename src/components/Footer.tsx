@@ -46,7 +46,7 @@ export const Footer: React.FC = () => {
             </div>
 
             <p className="text-xs text-slate-300 leading-relaxed">
-              Sistem Informasi Manajemen Skripsi dan Layanan Bebas Pustaka Daring resmi Universitas Riau untuk kelengkapan administrasi tugas akhir, yudisium, dan wisuda mahasiswa.
+              Sistem Informasi Manajemen Skripsi dan Repositori Karya Ilmiah resmi Universitas Riau untuk pengumpulan, verifikasi, dan administrasi naskah tugas akhir mahasiswa.
             </p>
 
             <div className="pt-2 text-[11px] text-slate-400 space-y-1">
@@ -72,7 +72,7 @@ export const Footer: React.FC = () => {
                   className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors cursor-pointer group text-left"
                 >
                   <ChevronRight className="w-3 h-3 text-sky-400 group-hover:translate-x-0.5 transition-transform" />
-                  <span>Formulir Bebas Pustaka</span>
+                  <span>Penyerahan Naskah Skripsi</span>
                 </button>
               </li>
               <li>
@@ -82,7 +82,7 @@ export const Footer: React.FC = () => {
                   className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors cursor-pointer group text-left"
                 >
                   <ChevronRight className="w-3 h-3 text-sky-400 group-hover:translate-x-0.5 transition-transform" />
-                  <span>Lacak Berkas & Status Sirkulasi</span>
+                  <span>Lacak Status Verifikasi Naskah</span>
                 </button>
               </li>
               <li>

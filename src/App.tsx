@@ -10,7 +10,6 @@ import { GuidesView } from './components/GuidesView';
 import { LoginModal } from './components/LoginModal';
 import { AnnouncementsModal } from './components/AnnouncementsModal';
 import { PrintCertificateModal } from './components/PrintCertificateModal';
-import { GmailInboxModal } from './components/GmailInboxModal';
 import { Footer } from './components/Footer';
 import { ArrowUp } from 'lucide-react';
 
@@ -120,7 +119,6 @@ export const App: React.FC = () => {
       {/* Global Modals */}
       <LoginModal />
       <AnnouncementsModal />
-      <GmailInboxModal />
       {selectedSkripsiForPrint && (
         <PrintCertificateModal
           skripsiItem={selectedSkripsiForPrint}

@@ -1,31 +1,20 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import {
-  AlertTriangle,
-  CheckCircle,
-  CheckCircle2,
-  FileText,
   Printer,
-  Calendar,
-  BookX,
-  BookCheck,
   Building,
-  Layers,
-  Save,
   Check,
-  Mail,
-  Send,
-  ExternalLink,
-  UserCheck,
   Search,
   Phone,
-  UploadCloud,
-  FileUp,
   FileCheck2,
   Users,
-  ShieldCheck,
   Info,
-  Clock
+  CheckCircle2,
+  Mail,
+  BookOpen,
+  FileUp,
+  ShieldCheck,
+  Calendar
 } from 'lucide-react';
 import { PrintCertificateModal } from './PrintCertificateModal';
 import { Skripsi } from '../types/database';
@@ -40,13 +29,11 @@ export const StudentPortal: React.FC = () => {
     getJurusanByFakultas,
     addSkripsi,
     updateSkripsi,
-    sendCertificateToGmail,
-    setPreviewEmailModal,
     setActiveTab,
     setTrackingNim,
   } = useApp();
 
-  // Form states - completely clean & empty, ready for real user entry!
+  // Form states
   const [nim, setNim] = useState<string>('');
   const [nama, setNama] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -62,23 +49,18 @@ export const StudentPortal: React.FC = () => {
   // File Upload states
   const [uploadedFileName, setUploadedFileName] = useState<string>('');
   const [uploadedFileSize, setUploadedFileSize] = useState<string>('');
-  const [pengesahanFileName, setPengesahanFileName] = useState<string>('');
-  const [hardCopyChecked, setHardCopyChecked] = useState<boolean>(false);
-  const [softCopyChecked, setSoftCopyChecked] = useState<boolean>(false);
+  const [hardCopyChecked, setHardCopyChecked] = useState<boolean>(true);
+  const [softCopyChecked, setSoftCopyChecked] = useState<boolean>(true);
   const [agreePlagiarism, setAgreePlagiarism] = useState<boolean>(false);
 
   // Status and feedback
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string>('');
   const [showPrintModal, setShowPrintModal] = useState<boolean>(false);
-  const [isSendingEmail, setIsSendingEmail] = useState<boolean>(false);
   const [lastSubmittedId, setLastSubmittedId] = useState<number | null>(null);
 
   // Find existing skripsi submission matching entered NIM
   const existingSkripsi = skripsi.find(s => s.nim.trim() === nim.trim());
-
-  // Check student loan status from library database based on NIM
   const matchedUser = users.find(u => u.UserName.trim() === nim.trim() && u.JenisUser === 2);
-  const pinjamCount = matchedUser ? matchedUser.Pinjam : 0;
 
   // Sync data when a known NIM is entered or selected
   const handleNimLookup = (targetNim: string) => {
@@ -120,30 +102,30 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
-  // Active skripsi item for printing/emailing
+  // Active skripsi item for printing
   const activeSkripsiItem: Skripsi = existingSkripsi
     ? existingSkripsi
     : {
         id_skripsi: lastSubmittedId || 999,
         id_jenis_dokumen: selectedJenisDokumenId,
-        no_surat: `0${skripsi.length + 1}/SKR/FT/2024`,
+        no_surat: `0${skripsi.length + 1}/SKR/FT/2026`,
         nama: nama.trim() || 'Nama Mahasiswa',
         nim: nim.trim() || '2007111002',
         email: email.trim() || `${nim}@student.unri.ac.id`,
         email_sent_at: null,
         id_fakultas: selectedFakultasId,
         id_jurusan: selectedJurusanId,
-        judul: judul.trim() || 'Judul Karya Ilmiah Mahasiswa',
+        judul: judul.trim() || 'Judul Naskah Skripsi Mahasiswa',
         hard_copy: hardCopyChecked ? 1 : 0,
         soft_copy: softCopyChecked ? 1 : 0,
         tanggal,
       };
 
   // Handle Save or Update Submission
-  const handleSaveSubmission = (e: React.FormEvent, andSendToEmail: boolean = false) => {
+  const handleSaveSubmission = (e: React.FormEvent) => {
     e.preventDefault();
     if (!nim.trim()) {
-      alert('NIM Mahasiswa wajib diisi!');
+      alert('NIM Penulis/Mahasiswa wajib diisi!');
       return;
     }
     if (!nama.trim()) {
@@ -151,20 +133,19 @@ export const StudentPortal: React.FC = () => {
       return;
     }
     if (!email.trim()) {
-      alert('Alamat Gmail Mahasiswa wajib diisi untuk pengiriman surat!');
+      alert('Alamat Email Mahasiswa wajib diisi!');
       return;
     }
     if (!judul.trim()) {
-      alert('Judul karya ilmiah wajib diisi!');
+      alert('Judul Naskah Skripsi wajib diisi!');
       return;
     }
     if (!agreePlagiarism) {
-      alert('Harap menyetujui pernyataan keaslian karya ilmiah dan bebas plagiarisme.');
+      alert('Harap centang persetujuan keaslian naskah skripsi dan bebas plagiarisme.');
       return;
     }
 
     const emailToUse = email.trim();
-    let currentId = existingSkripsi?.id_skripsi;
 
     if (existingSkripsi) {
       updateSkripsi(existingSkripsi.id_skripsi, {
@@ -180,10 +161,9 @@ export const StudentPortal: React.FC = () => {
         soft_copy: softCopyChecked ? 1 : 0,
       });
       setLastSubmittedId(existingSkripsi.id_skripsi);
-      setSaveSuccessMsg('Formulir penyerahan tugas akhir berhasil diperbarui!');
+      setSaveSuccessMsg('Data naskah skripsi berhasil diperbarui di sistem repositori!');
     } else {
       const nextId = skripsi.length > 0 ? Math.max(...skripsi.map(s => s.id_skripsi)) + 1 : 1;
-      currentId = nextId;
       setLastSubmittedId(nextId);
 
       // Generate nomor surat resmi UPA Perpustakaan
@@ -198,7 +178,7 @@ export const StudentPortal: React.FC = () => {
         ? 'FKIP'
         : 'UNRI';
 
-      const formattedNoSurat = `0${nextId}/SKR/${fakCode}/2024`;
+      const formattedNoSurat = `00${nextId}/SKR/${fakCode}/2026`;
 
       addSkripsi({
         id_jenis_dokumen: selectedJenisDokumenId,
@@ -214,24 +194,12 @@ export const StudentPortal: React.FC = () => {
         soft_copy: softCopyChecked ? 1 : 0,
         tanggal,
       });
-      setSaveSuccessMsg('Penyerahan karya ilmiah berhasil disimpan & surat diterbitkan!');
-    }
-
-    if (andSendToEmail && currentId) {
-      handleTriggerSendEmail(currentId, emailToUse);
+      setSaveSuccessMsg('Naskah skripsi berhasil didaftarkan & Tanda Terima Resmi diterbitkan!');
     }
 
     setTimeout(() => {
       setSaveSuccessMsg('');
-    }, 4500);
-  };
-
-  const handleTriggerSendEmail = (targetId: number, targetEmail: string) => {
-    setIsSendingEmail(true);
-    setTimeout(() => {
-      sendCertificateToGmail(targetId, targetEmail);
-      setIsSendingEmail(false);
-    }, 700);
+    }, 6000);
   };
 
   // File change handler
@@ -244,772 +212,439 @@ export const StudentPortal: React.FC = () => {
     }
   };
 
-  const handlePengesahanUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setPengesahanFileName(file.name);
-    }
-  };
-
-  // Determine eligibility
-  const hasEnteredNim = Boolean(nim.trim());
-  const isHardCopyReady = hardCopyChecked || existingSkripsi?.hard_copy === 1;
-  const isSoftCopyReady = softCopyChecked || existingSkripsi?.soft_copy === 1;
-  const isLoanClear = hasEnteredNim && pinjamCount === 0;
-  const isEligibleToPrint = hasEnteredNim && isHardCopyReady && isSoftCopyReady && isLoanClear;
-
   return (
-    <div className="py-6 sm:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="py-6 sm:py-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
       
-      {/* Header Banner - Standar E-Form Resmi UPA Perpustakaan UNRI */}
+      {/* Header Banner Resmi SIM-SKRIPSI UNRI */}
       <ScrollReveal delay={0} direction="up">
-        <div className="mb-8 p-6 sm:p-8 rounded-2xl bg-[#003366] text-white border border-[#002244] shadow-sm relative overflow-hidden">
+        <div className="mb-8 p-6 sm:p-8 rounded-3xl bg-[#002244] text-white border border-[#001833] shadow-md relative overflow-hidden">
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2.5 max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-white/10 text-white border border-white/20">
+            <div className="space-y-2.5 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-white/10 text-sky-200 border border-white/20">
                 <FileCheck2 className="w-3.5 h-3.5 text-sky-300" />
-                <span>SIM-SKRIPSI • Layanan Penyerahan Naskah Akademik</span>
+                <span>SIM-SKRIPSI • Portal Penyerahan Karya Ilmiah</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
                 Penyerahan Mandiri Naskah Skripsi & Tugas Akhir
               </h1>
               <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
-                Formulir resmi UPA Perpustakaan Universitas Riau untuk pengumpulan, pengesahan, dan pengarsipan naskah skripsi, tesis, serta penerbitan tanda terima penyerahan karya ilmiah mahasiswa.
+                Formulir resmi UPA Perpustakaan Universitas Riau untuk pengumpulan, verifikasi naskah hardcopy & softcopy digital, serta penerbitan tanda terima penyerahan skripsi bagi mahasiswa tingkat akhir.
               </p>
             </div>
 
-            {/* Ketentuan Ringkas Layanan */}
-            <div className="hidden lg:flex flex-col gap-1.5 shrink-0 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-xs text-blue-100 max-w-xs">
+            {/* Ketentuan Berkas */}
+            <div className="hidden md:flex flex-col gap-1.5 shrink-0 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-xs text-blue-100 max-w-xs">
               <span className="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
                 <Info className="w-3.5 h-3.5 text-sky-300" />
-                <span>Ketentuan Berkas</span>
+                <span>Ketentuan Penyerahan</span>
               </span>
               <p className="text-[11px] leading-relaxed text-blue-100/90">
-                Naskah skripsi wajib memuat lembar pengesahan dewan penguji dan berkas softcopy PDF lengkap sebelum tanda terima penyerahan diterbitkan.
+                Pastikan naskah tugas akhir telah disahkan dewan penguji dan berkas softcopy PDF lengkap sebelum mengajukan formulir.
               </p>
             </div>
           </div>
         </div>
       </ScrollReveal>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-        
-        {/* ======================================================== */}
-        {/* LEFT COLUMN: STATUS KELENGKAPAN & TANDA TERIMA NASKAH    */}
-        {/* ======================================================== */}
-        <ScrollReveal delay={100} direction="up" className="lg:col-span-1">
-          <div className="flex flex-col gap-6">
-          
-          {/* KARTU 1: STATUS KELAYAKAN PENYERAHAN NASKAH */}
-          <div
-            className={`p-5 sm:p-6 rounded-3xl border shadow-sm transition-all duration-300 ${
-              !hasEnteredNim
-                ? 'bg-slate-50/90 border-slate-200/90 shadow-slate-100/50'
-                : !isLoanClear
-                ? 'bg-rose-50/70 border-rose-200 shadow-rose-100/50'
-                : 'bg-emerald-50/70 border-emerald-200 shadow-emerald-100/50'
-            }`}
-          >
-            <div className="flex items-center justify-between pb-4 border-b border-slate-200/60">
-              <span className="text-xs font-bold tracking-wider uppercase text-slate-600">
-                STATUS KELENGKAPAN SKRIPSI
-              </span>
-              <div
-                className={`p-2 rounded-xl ${
-                  !hasEnteredNim
-                    ? 'bg-slate-200/70 text-slate-500 border border-slate-300'
-                    : !isLoanClear
-                    ? 'bg-rose-100 text-rose-700 border border-rose-200'
-                    : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
-                }`}
-              >
-                {!hasEnteredNim ? (
-                  <Clock className="w-5 h-5 text-slate-500" />
-                ) : !isLoanClear ? (
-                  <BookX className="w-5 h-5" />
-                ) : (
-                  <BookCheck className="w-5 h-5" />
-                )}
-              </div>
-            </div>
-
-            <div className="mt-5">
-              {!hasEnteredNim ? (
-                <>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black text-slate-400">—</span>
-                    <span className="text-sm font-bold text-slate-600">
-                      Menunggu Input NIM Penulis
-                    </span>
-                  </div>
-
-                  <div className="mt-4 p-4 rounded-2xl bg-white border border-slate-200 text-slate-600 text-xs leading-relaxed space-y-2 shadow-xs">
-                    <div className="flex items-center gap-1.5 font-bold text-slate-700">
-                      <Search className="w-4 h-4 text-blue-600 shrink-0" />
-                      <span>Belum Ada NIM Terisi</span>
-                    </div>
-                    <p>
-                      Silakan ketik <strong>NIM Anda</strong> pada formulir di sebelah kanan. Sistem akan memuat data naskah dan memeriksa catatan bebas sirkulasi perpustakaan secara otomatis.
-                    </p>
-                    <p className="text-[11px] text-slate-400">
-                      Status berkas: <strong className="text-slate-500">BELUM TERDAFTAR</strong>.
-                    </p>
-                  </div>
-                </>
-              ) : !isLoanClear ? (
-                <>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black text-rose-600">{pinjamCount}</span>
-                    <span className="text-sm font-bold text-slate-700">Buku Belum Dikembalikan</span>
-                  </div>
-
-                  <div className="mt-4 p-4 rounded-2xl bg-white border border-rose-200 text-rose-900 text-xs leading-relaxed space-y-2 shadow-sm">
-                    <div className="flex items-center gap-1.5 font-bold text-rose-700">
-                      <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-                      <span>Tanggungan Sirkulasi Aktif</span>
-                    </div>
-                    <p>
-                      NIM <strong>{nim}</strong> masih memiliki tanggungan peminjaman <strong>{pinjamCount} buku</strong> di perpustakaan UNRI.
-                    </p>
-                    <p className="text-[11px] text-slate-500">
-                      Kembalikan buku pinjaman ke loket sirkulasi agar tanda terima resmi penyerahan skripsi dapat diterbitkan.
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black text-emerald-600">Siap</span>
-                    <span className="text-sm font-bold text-slate-700">Verifikasi Naskah Skripsi</span>
-                  </div>
-
-                  <div className="mt-4 p-4 rounded-2xl bg-white border border-emerald-200 text-emerald-900 text-xs leading-relaxed space-y-2 shadow-sm">
-                    <div className="flex items-center gap-1.5 font-bold text-emerald-700">
-                      <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>Bebas Tanggungan Sirkulasi!</span>
-                    </div>
-                    <p>
-                      Akun NIM <strong>{nim}</strong> bersih dari tanggungan pinjaman buku. Naskah skripsi siap diproses dan diarsipkan.
-                    </p>
-                    <p className="text-[11px] text-slate-500">
-                      Status administrasi: <strong className="text-emerald-700">MEMENUHI SYARAT</strong>.
-                    </p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-slate-200/80 text-[11px] text-slate-500 flex items-center gap-1.5">
-              <UserCheck className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-              <span>
-                {hasEnteredNim
-                  ? 'Data naskah dan keanggotaan terhubung langsung dengan basis data perpustakaan.'
-                  : 'Sistem siap memverifikasi data penyerahan skripsi secara otomatis.'}
-              </span>
-            </div>
+      {/* Alur 3 Langkah Penyerahan */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-8">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 font-bold text-xs flex items-center justify-center border border-blue-200 shrink-0">
+            01
           </div>
-
-          {/* KARTU 2: PENERBITAN TANDA TERIMA PENYERAHAN SKRIPSI */}
-          <div className="p-5 sm:p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                <span className="text-xs font-bold tracking-wider uppercase text-slate-600">
-                  TANDA TERIMA PENYERAHAN SKRIPSI
-                </span>
-                <div className="p-2 rounded-xl bg-blue-50 text-blue-700 border border-blue-100">
-                  <Mail className="w-5 h-5" />
-                </div>
-              </div>
-
-              {!hasEnteredNim ? (
-                /* TAMPILAN KETIKA NIM MASIH KOSONG */
-                <div className="mt-5 space-y-4">
-                  <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/90 text-center space-y-3">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 border border-blue-200/70 flex items-center justify-center mx-auto shadow-xs">
-                      <FileText className="w-6 h-6" />
-                    </div>
-                    <div className="space-y-1.5">
-                      <h3 className="text-sm font-bold text-slate-800">
-                        Menunggu Data Penyerahan Naskah
-                      </h3>
-                      <p className="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">
-                        Tanda Terima Penyerahan Skripsi resmi baru dapat diterbitkan setelah Anda melengkapi data karya ilmiah pada formulir di sebelah kanan.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="p-4 rounded-2xl bg-white border border-slate-200 space-y-2.5 text-xs text-slate-600">
-                    <div className="font-bold text-slate-700 flex items-center gap-1.5 text-[11px] uppercase tracking-wide">
-                      <Info className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                      <span>Alur Penyerahan Naskah:</span>
-                    </div>
-                    <ul className="space-y-1.5 text-[11.5px] text-slate-600 list-disc list-inside">
-                      <li>Ketik NIM untuk memuat data penulis.</li>
-                      <li>Unggah naskah softcopy PDF & konfirmasi hardcopy.</li>
-                      <li>Kirim formulir untuk mencatat ke basis data repositori.</li>
-                      <li>Unduh / Cetak Bukti Tanda Terima resmi penyerahan skripsi.</li>
-                    </ul>
-                  </div>
-                </div>
-              ) : (
-                /* TAMPILAN KETIKA NIM SUDAH DIISI */
-                <div className="mt-4 space-y-3">
-                  <h3 className="text-base font-bold text-slate-900">
-                    Bukti Sah Penyerahan Karya Ilmiah
-                  </h3>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Surat resmi ber-kop UPA Perpustakaan Universitas Riau ber-Nomor Surat resmi untuk kelengkapan berkas yudisium dan pendaftaran wisuda.
-                  </p>
-
-                  {/* Requirements Checklist */}
-                  <div className="space-y-2.5 py-2">
-                    {/* 1. Hardcopy */}
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-slate-700 font-medium flex items-center gap-2">
-                        {isHardCopyReady ? (
-                          <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                        ) : (
-                          <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
-                        )}
-                        <span>1. Jilid Hardcopy Skripsi</span>
-                      </span>
-                      <span
-                        className={`font-bold ${
-                          isHardCopyReady ? 'text-emerald-700' : 'text-amber-600'
-                        }`}
-                      >
-                        {isHardCopyReady ? 'Sudah Diserahkan' : 'Belum Diserahkan'}
-                      </span>
-                    </div>
-
-                    {/* 2. Softcopy */}
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-slate-700 font-medium flex items-center gap-2">
-                        {isSoftCopyReady ? (
-                          <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                        ) : (
-                          <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
-                        )}
-                        <span>2. Berkas Softcopy PDF</span>
-                      </span>
-                      <span
-                        className={`font-bold ${
-                          isSoftCopyReady ? 'text-emerald-700' : 'text-amber-600'
-                        }`}
-                      >
-                        {isSoftCopyReady ? 'Lengkap & Valid' : 'Belum Diunggah'}
-                      </span>
-                    </div>
-
-                    {/* 3. Bebas Pinjaman */}
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-slate-700 font-medium flex items-center gap-2">
-                        {isLoanClear ? (
-                          <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                        ) : (
-                          <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
-                        )}
-                        <span>3. Bebas Pinjaman Koleksi</span>
-                      </span>
-                      <span
-                        className={`font-bold ${
-                          isLoanClear ? 'text-emerald-700' : 'text-rose-600'
-                        }`}
-                      >
-                        {isLoanClear
-                          ? '0 Tanggungan (Bebas)'
-                          : `${pinjamCount} Buku Tertunggak`}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Gmail Delivery Log badge */}
-                  {activeSkripsiItem.email_sent_at && (
-                    <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
-                      <div className="flex items-center gap-1.5 font-bold">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                        <span>Tanda Terima Telah Terkirim ke Gmail:</span>
-                      </div>
-                      <div className="text-[11px] text-slate-600 mt-1.5">
-                        Penerima: <strong className="text-blue-800 font-semibold">{activeSkripsiItem.email}</strong>
-                        <br />
-                        Waktu kirim: {activeSkripsiItem.email_sent_at}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setPreviewEmailModal({
-                            skripsi: activeSkripsiItem,
-                            recipientEmail: activeSkripsiItem.email || email,
-                          })
-                        }
-                        className="mt-2.5 inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 hover:text-blue-900 underline cursor-pointer"
-                      >
-                        <span>Buka Kotak Masuk Gmail Saya</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {hasEnteredNim && (
-              <div className="mt-6 pt-4 border-t border-slate-100 flex flex-col gap-2.5">
-                {/* Button: Kirim ke Gmail */}
-                <button
-                  type="button"
-                  disabled={isSendingEmail || !isEligibleToPrint}
-                  onClick={() => {
-                    if (activeSkripsiItem.id_skripsi) {
-                      handleTriggerSendEmail(activeSkripsiItem.id_skripsi, email);
-                    }
-                  }}
-                  className={`w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-sm ${
-                    isEligibleToPrint
-                      ? 'bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 cursor-pointer'
-                      : 'bg-slate-50 text-slate-400 border border-slate-200 cursor-not-allowed opacity-75'
-                  }`}
-                >
-                  <Send className="w-4 h-4 text-blue-600" />
-                  <span>{isSendingEmail ? 'Mengirim Surat ke Gmail...' : 'Kirim Tanda Terima ke Gmail'}</span>
-                </button>
-
-                {/* Button: Cetak Fisik A4 */}
-                <button
-                  type="button"
-                  onClick={() => setShowPrintModal(true)}
-                  className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold transition-all shadow-sm ${
-                    isEligibleToPrint
-                      ? 'bg-gradient-to-r from-blue-700 via-blue-600 to-sky-600 hover:from-blue-600 hover:to-sky-500 text-white shadow-blue-500/25 cursor-pointer'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 cursor-pointer'
-                  }`}
-                >
-                  <Printer className="w-4 h-4" />
-                  <span>
-                    {isEligibleToPrint ? 'Cetak Tanda Terima Penyerahan (A4)' : 'Pratinjau Format Cetak (A4)'}
-                  </span>
-                </button>
-
-                {!isEligibleToPrint && (
-                  <p className="text-[10px] text-center text-slate-400">
-                    *Tanda terima dapat dicetak setelah berkas hardcopy, softcopy, dan bebas sirkulasi terpenuhi.
-                  </p>
-                )}
-              </div>
-            )}
+          <div>
+            <h4 className="text-xs font-bold text-slate-800">Data Penulis & Prodi</h4>
+            <p className="text-[11px] text-slate-500">Ketik NIM untuk memuat data</p>
           </div>
         </div>
-      </ScrollReveal>
 
-      {/* ======================================================== */}
-      {/* RIGHT COLUMN: FORMULIR INPUT LENGKAP MANDIRI              */}
-      {/* ======================================================== */}
-      <ScrollReveal delay={200} direction="up" className="lg:col-span-2">
-        <div className="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 border-b border-slate-100 gap-3">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-sky-50 text-sky-700 font-bold text-xs flex items-center justify-center border border-sky-200 shrink-0">
+            02
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-slate-800">Judul & Unggah PDF</h4>
+            <p className="text-[11px] text-slate-500">Naskah lengkap softcopy</p>
+          </div>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex items-center gap-3">
+          <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 font-bold text-xs flex items-center justify-center border border-emerald-200 shrink-0">
+            03
+          </div>
+          <div>
+            <h4 className="text-xs font-bold text-slate-800">Tanda Terima Sah</h4>
+            <p className="text-[11px] text-slate-500">Cetak surat berkop resmi A4</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Form Card */}
+      <div className="p-6 sm:p-10 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-8">
+        
+        {/* Banner Jika Naskah Sudah Pernah Diserahkan / Sukses */}
+        {(existingSkripsi || lastSubmittedId) && (
+          <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 font-bold text-sm text-emerald-800">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>Naskah Skripsi Terdaftar di Repositori!</span>
+              </div>
+              <p className="text-xs text-slate-600">
+                Nomor Surat Resmi: <strong className="text-slate-900 font-mono font-bold">{activeSkripsiItem.no_surat}</strong>
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap shrink-0">
+              <button
+                type="button"
+                onClick={() => setShowPrintModal(true)}
+                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <Printer className="w-4 h-4" />
+                <span>Cetak Tanda Terima (A4)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setTrackingNim(nim);
+                  setActiveTab('tracking');
+                }}
+                className="px-4 py-2.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <Search className="w-3.5 h-3.5 text-blue-600" />
+                <span>Lacak Status</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {saveSuccessMsg && (
+          <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-2.5 animate-in fade-in duration-200">
+            <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>{saveSuccessMsg}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSaveSubmission} className="space-y-8">
+          
+          {/* BAGIAN 1: IDENTITAS PENULIS */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-[#003366] uppercase tracking-wider">
+                <Users className="w-4 h-4 text-blue-600" />
+                <span>1. Identitas Penulis / Mahasiswa</span>
+              </div>
+              <span className="text-[11px] text-slate-400 font-medium">* Wajib diisi</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <span className="text-xs font-bold tracking-wider uppercase text-blue-700">
-                  FORMULIR PENYERAHAN DOKUMEN TUGAS AKHIR
-                </span>
-                <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 mt-1">
-                  Data Penyerahan Karya Ilmiah & Identitas Mahasiswa
-                </h2>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
+                  <span>Nomor Induk Mahasiswa (NIM) *</span>
+                  <span className="text-[11px] text-blue-600 font-medium">Contoh: 2007111002</span>
+                </label>
+                <input
+                  type="text"
+                  value={nim}
+                  onChange={(e) => handleNimLookup(e.target.value)}
+                  placeholder="Ketik NIM Anda..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 font-semibold focus:outline-none focus:border-blue-600 focus:bg-white transition-colors"
+                  required
+                />
+                {matchedUser && (
+                  <p className="mt-1.5 text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Mahasiswa Terverifikasi: {matchedUser.Nama}</span>
+                  </p>
+                )}
               </div>
 
-              {existingSkripsi && (
-                <div className="flex items-center gap-2 self-start sm:self-auto">
-                  <span className="text-xs text-slate-500 font-medium">Nomor Surat:</span>
-                  <span className="text-xs px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 font-bold tracking-wide">
-                    {existingSkripsi.no_surat || '002/SKR/FT/2024'}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Nama Lengkap Mahasiswa *
+                </label>
+                <input
+                  type="text"
+                  value={nama}
+                  onChange={(e) => setNama(e.target.value)}
+                  placeholder="Nama lengkap sesuai ijazah / KTM..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 font-medium focus:outline-none focus:border-blue-600 focus:bg-white transition-colors"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Alamat Email Mahasiswa *</span>
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="nama.mahasiswa@student.unri.ac.id"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Nomor WhatsApp Aktif</span>
+                </label>
+                <input
+                  type="text"
+                  value={noHp}
+                  onChange={(e) => setNoHp(e.target.value)}
+                  placeholder="0812-xxxx-xxxx"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* BAGIAN 2: PROGRAM STUDI & PEMBIMBING */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-[#003366] uppercase tracking-wider">
+                <Building className="w-4 h-4 text-blue-600" />
+                <span>2. Program Studi & Dosen Pembimbing</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Fakultas *
+                </label>
+                <select
+                  value={selectedFakultasId}
+                  onChange={(e) => handleFakultasChange(Number(e.target.value))}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white cursor-pointer font-medium transition-colors"
+                >
+                  {fakultas.map((f) => (
+                    <option key={f.id_fakultas} value={f.id_fakultas}>
+                      {f.fakultas}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Program Studi / Jurusan *
+                </label>
+                <select
+                  value={selectedJurusanId}
+                  onChange={(e) => setSelectedJurusanId(Number(e.target.value))}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white cursor-pointer font-medium transition-colors"
+                >
+                  {availableJurusan.map((j) => (
+                    <option key={j.id_jurusan} value={j.id_jurusan}>
+                      {j.jurusan}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Dosen Pembimbing I
+                </label>
+                <input
+                  type="text"
+                  value={pembimbing1}
+                  onChange={(e) => setPembimbing1(e.target.value)}
+                  placeholder="Nama Lengkap & Gelar Dosen Pembimbing 1..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Dosen Pembimbing II
+                </label>
+                <input
+                  type="text"
+                  value={pembimbing2}
+                  onChange={(e) => setPembimbing2(e.target.value)}
+                  placeholder="Nama Lengkap & Gelar Dosen Pembimbing 2..."
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* BAGIAN 3: DATA NASKAH SKRIPSI */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-[#003366] uppercase tracking-wider">
+                <BookOpen className="w-4 h-4 text-blue-600" />
+                <span>3. Data Naskah Skripsi / Tugas Akhir</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Jenis Dokumen Karya Ilmiah *
+                </label>
+                <select
+                  value={selectedJenisDokumenId}
+                  onChange={(e) => setSelectedJenisDokumenId(Number(e.target.value))}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white cursor-pointer font-medium transition-colors"
+                >
+                  {jenisDokumen.map((d) => (
+                    <option key={d.id_jenis_dokumen} value={d.id_jenis_dokumen}>
+                      {d.jenis_dokumen} ({d.keterangan_jenis_dokumen})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Tanggal Penyerahan Naskah *</span>
+                </label>
+                <input
+                  type="date"
+                  value={tanggal}
+                  onChange={(e) => setTanggal(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                Judul Lengkap Naskah Skripsi / Tugas Akhir *
+              </label>
+              <textarea
+                rows={3}
+                value={judul}
+                onChange={(e) => setJudul(e.target.value)}
+                placeholder="Tuliskan judul lengkap naskah skripsi Anda sesuai lembar pengesahan dewan penguji..."
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors leading-relaxed"
+                required
+              />
+            </div>
+          </div>
+
+          {/* BAGIAN 4: BERKAS & CHECKLIST VERIFIKASI */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2 text-xs font-extrabold text-[#003366] uppercase tracking-wider">
+                <FileUp className="w-4 h-4 text-blue-600" />
+                <span>4. Berkas Softcopy & Konfirmasi Hardcopy</span>
+              </div>
+            </div>
+
+            {/* Upload Softcopy Box */}
+            <div className="p-6 rounded-2xl border-2 border-dashed border-slate-200 hover:border-blue-400 bg-slate-50/50 transition-colors text-center">
+              <input
+                type="file"
+                id="file-pdf-upload"
+                accept=".pdf"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              <label
+                htmlFor="file-pdf-upload"
+                className="cursor-pointer flex flex-col items-center justify-center space-y-2"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200 shadow-2xs">
+                  <FileUp className="w-6 h-6" />
+                </div>
+                <div>
+                  <span className="text-xs font-bold text-blue-700 hover:underline">
+                    Pilih Berkas Naskah PDF (Softcopy)
                   </span>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    Format file: PDF (Maks. 50 MB) • Memuat naskah utuh & lembar pengesahan bertanda tangan
+                  </p>
+                </div>
+              </label>
+
+              {uploadedFileName && (
+                <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{uploadedFileName}</span>
+                  {uploadedFileSize && <span className="text-[11px] text-emerald-600">({uploadedFileSize})</span>}
                 </div>
               )}
             </div>
 
-            {saveSuccessMsg && (
-              <div className="my-5 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-200 shadow-sm">
-                <div className="flex items-center gap-2.5">
-                  <Check className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{saveSuccessMsg}</span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTrackingNim(nim);
-                    setActiveTab('tracking');
-                  }}
-                  className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
-                >
-                  <Search className="w-3.5 h-3.5" />
-                  <span>Lacak Status & Resi Digital &rarr;</span>
-                </button>
-              </div>
-            )}
+            {/* Checklist Persyaratan */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={hardCopyChecked}
+                  onChange={(e) => setHardCopyChecked(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                <span className="text-xs text-slate-700 leading-relaxed">
+                  <strong>Konfirmasi Penyerahan Hardcopy (Fisik):</strong> Saya telah / bersedia menyerahkan naskah jilid tugas akhir lengkap dengan cover standar fakultas ke loket UPA Perpustakaan.
+                </span>
+              </label>
 
-            <form onSubmit={(e) => handleSaveSubmission(e, false)} className="mt-6 space-y-6">
-              
-              {/* BAGIAN 1: IDENTITAS MAHASISWA & KONTAK */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider pb-1 border-b border-slate-100">
-                  <UserCheck className="w-4 h-4 text-blue-600" />
-                  <span>1. Data Identitas Mahasiswa & Kontak</span>
-                </div>
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={softCopyChecked}
+                  onChange={(e) => setSoftCopyChecked(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                />
+                <span className="text-xs text-slate-700 leading-relaxed">
+                  <strong>Validasi Berkas Softcopy Digital:</strong> File PDF naskah tugas akhir telah sesuai ketentuan pemisahan berkas (Cover, Abstrak, BAB I-V, Daftar Pustaka).
+                </span>
+              </label>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
-                      <span>NIM Mahasiswa *</span>
-                      <span className="text-[11px] text-blue-600 font-medium">Ketik NIM Anda</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={nim}
-                      onChange={(e) => handleNimLookup(e.target.value)}
-                      placeholder="Contoh: 2007111002"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 font-semibold focus:outline-none focus:border-blue-600 focus:bg-white transition-colors"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
-                      <span>Nama Lengkap Mahasiswa *</span>
-                      <span className="text-[11px] text-blue-600 font-medium">Sesuai Ijazah / KTM</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={nama}
-                      onChange={(e) => setNama(e.target.value)}
-                      placeholder="Contoh: Siti Nurhaliza"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 font-medium focus:outline-none focus:border-blue-600 focus:bg-white transition-colors"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                      <Mail className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Alamat Gmail Mahasiswa (Untuk Surat PDF) *</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="nama.mahasiswa@gmail.com"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>Nomor WhatsApp / HP Aktif *</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={noHp}
-                      onChange={(e) => setNoHp(e.target.value)}
-                      placeholder="0812-xxxx-xxxx"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* BAGIAN 2: DATA AKADEMIK & DOSEN PEMBIMBING */}
-              <div className="space-y-4 pt-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider pb-1 border-b border-slate-100">
-                  <Building className="w-4 h-4 text-blue-600" />
-                  <span>2. Program Studi & Dosen Pembimbing</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                      <Building className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Fakultas *</span>
-                    </label>
-                    <select
-                      value={selectedFakultasId}
-                      onChange={(e) => handleFakultasChange(Number(e.target.value))}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white cursor-pointer font-medium transition-colors"
-                    >
-                      {fakultas.map((f) => (
-                        <option key={f.id_fakultas} value={f.id_fakultas}>
-                          {f.fakultas}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                      <Layers className="w-3.5 h-3.5 text-sky-600" />
-                      <span>Program Studi / Jurusan *</span>
-                    </label>
-                    <select
-                      value={selectedJurusanId}
-                      onChange={(e) => setSelectedJurusanId(Number(e.target.value))}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white cursor-pointer font-medium transition-colors"
-                    >
-                      {availableJurusan.map((j) => (
-                        <option key={j.id_jurusan} value={j.id_jurusan}>
-                          {j.jurusan}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-indigo-600" />
-                      <span>Dosen Pembimbing I (Utama)</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={pembimbing1}
-                      onChange={(e) => setPembimbing1(e.target.value)}
-                      placeholder="Nama Dosen Pembimbing I beserta gelar"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-indigo-600" />
-                      <span>Dosen Pembimbing II (Pendamping)</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={pembimbing2}
-                      onChange={(e) => setPembimbing2(e.target.value)}
-                      placeholder="Nama Dosen Pembimbing II beserta gelar"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium transition-colors"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* BAGIAN 3: INFORMASI KARYA ILMIAH */}
-              <div className="space-y-4 pt-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider pb-1 border-b border-slate-100">
-                  <FileText className="w-4 h-4 text-blue-600" />
-                  <span>3. Rincian Karya Ilmiah</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                      <Layers className="w-3.5 h-3.5 text-blue-600" />
-                      <span>Jenis Dokumen Karya Ilmiah *</span>
-                    </label>
-                    <select
-                      value={selectedJenisDokumenId}
-                      onChange={(e) => setSelectedJenisDokumenId(Number(e.target.value))}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white cursor-pointer font-medium transition-colors"
-                    >
-                      {jenisDokumen.map((d) => (
-                        <option key={d.id_jenis_dokumen} value={d.id_jenis_dokumen}>
-                          {d.jenis_dokumen} - {d.keterangan_jenis_dokumen}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-sky-600" />
-                      <span>Tanggal Penyerahan / Sidang *</span>
-                    </label>
-                    <input
-                      type="date"
-                      value={tanggal}
-                      onChange={(e) => setTanggal(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white cursor-pointer font-medium transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
-                    <FileText className="w-3.5 h-3.5 text-indigo-600" />
-                    <span>Judul Lengkap Karya Ilmiah / Tugas Akhir *</span>
-                  </label>
-                  <textarea
-                    rows={4}
-                    value={judul}
-                    onChange={(e) => setJudul(e.target.value)}
-                    placeholder="Masukkan judul skripsi lengkap sesuai lembar pengesahan dewan penguji..."
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:border-blue-600 focus:bg-white leading-relaxed placeholder-slate-400 font-normal transition-colors"
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* BAGIAN 4: UNGGAH BERKAS SOFTCOPY & HARDCOPY */}
-              <div className="space-y-4 pt-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900 uppercase tracking-wider pb-1 border-b border-slate-100">
-                  <UploadCloud className="w-4 h-4 text-blue-600" />
-                  <span>4. Unggah Berkas Digital (Softcopy PDF) & Hardcopy</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* File 1: Naskah Lengkap PDF */}
-                  <div className="p-4 rounded-2xl border-2 border-dashed border-blue-200 bg-blue-50/40 hover:bg-blue-50/70 transition-all flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <FileCheck2 className="w-5 h-5 text-blue-700" />
-                        <span className="text-xs font-bold text-blue-900">Naskah Skripsi Lengkap (PDF) *</span>
-                      </div>
-                      <p className="text-[11px] text-slate-500 mb-3">
-                        Format PDF berisi Cover, Abstrak, BAB 1 s/d Penutup, dan Daftar Pustaka.
-                      </p>
-                    </div>
-
-                    <div className="mt-2">
-                      <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-white border border-blue-300 text-blue-700 text-xs font-bold hover:bg-blue-50 cursor-pointer shadow-sm">
-                        <FileUp className="w-3.5 h-3.5 text-blue-600" />
-                        <span>Pilih Berkas PDF</span>
-                        <input
-                          type="file"
-                          accept=".pdf"
-                          onChange={handleFileUpload}
-                          className="hidden"
-                        />
-                      </label>
-                      <div className="mt-2 flex items-center justify-between text-[11px] text-slate-600 bg-white p-2 rounded-lg border border-slate-200">
-                        <span className="truncate max-w-[170px] font-medium text-slate-600">
-                          {uploadedFileName || 'Belum ada naskah PDF dipilih'}
-                        </span>
-                        {uploadedFileName && (
-                          <span className="text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 text-[10px]">
-                            {uploadedFileSize}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* File 2: Lembar Pengesahan */}
-                  <div className="p-4 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/60 hover:bg-slate-50 transition-all flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <FileCheck2 className="w-5 h-5 text-slate-700" />
-                        <span className="text-xs font-bold text-slate-900">Lembar Pengesahan Sidang *</span>
-                      </div>
-                      <p className="text-[11px] text-slate-500 mb-3">
-                        Scan lembar pengesahan bertanda tangan lengkap dewan penguji dan pimpinan fakultas.
-                      </p>
-                    </div>
-
-                    <div className="mt-2">
-                      <label className="flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-white border border-slate-300 text-slate-700 text-xs font-bold hover:bg-slate-50 cursor-pointer shadow-sm">
-                        <FileUp className="w-3.5 h-3.5 text-slate-600" />
-                        <span>Pilih Lembar Pengesahan</span>
-                        <input
-                          type="file"
-                          accept=".pdf,.jpg,.png"
-                          onChange={handlePengesahanUpload}
-                          className="hidden"
-                        />
-                      </label>
-                      <div className="mt-2 flex items-center justify-between text-[11px] text-slate-600 bg-white p-2 rounded-lg border border-slate-200">
-                        <span className="truncate max-w-[170px] font-medium text-slate-600">
-                          {pengesahanFileName || 'Belum ada lembar pengesahan'}
-                        </span>
-                        {pengesahanFileName && (
-                          <span className="text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 text-[10px]">
-                            Siap
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Konfirmasi Hardcopy & Softcopy Checkbox */}
-                <div className="p-4 rounded-2xl bg-blue-50/70 border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-2">
-                    <Info className="w-4 h-4 text-blue-700 shrink-0" />
-                    <span className="text-xs font-bold text-blue-900">
-                      Konfirmasi Kelengkapan Berkas:
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-800">
-                      <input
-                        type="checkbox"
-                        checked={hardCopyChecked}
-                        onChange={(e) => setHardCopyChecked(e.target.checked)}
-                        className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
-                      />
-                      <span>Hardcopy Dijilid & Diserahkan</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-800">
-                      <input
-                        type="checkbox"
-                        checked={softCopyChecked}
-                        onChange={(e) => setSoftCopyChecked(e.target.checked)}
-                        className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
-                      />
-                      <span>Softcopy PDF Telah Lengkap</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {/* BAGIAN 5: PERNYATAAN INTEGRITAS AKADEMIK */}
-              <div className="pt-2 p-4 rounded-2xl bg-slate-50 border border-slate-200">
-                <label className="flex items-start gap-3 cursor-pointer text-xs text-slate-700 leading-relaxed">
-                  <input
-                    type="checkbox"
-                    checked={agreePlagiarism}
-                    onChange={(e) => setAgreePlagiarism(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 mt-0.5 shrink-0"
-                    required
-                  />
-                  <span>
-                    Saya menyatakan dengan sesungguhnya bahwa karya ilmiah tugas akhir yang saya serahkan ini adalah <strong>asli, bebas dari plagiarisme</strong>, dan disusun sesuai dengan pedoman karya ilmiah Universitas Riau. Saya memberikan hak kepada UPA Perpustakaan Universitas Riau untuk mempublikasikan dan mengarsipkan dokumen ini.
-                  </span>
-                </label>
-                <div className="mt-2 flex items-center gap-1.5 text-[11px] text-emerald-700 font-semibold pl-7">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                  <span>Sesuai Surat Edaran Rektor UNRI No. Standar Mutu Repositori Digital.</span>
-                </div>
-              </div>
-
-              {/* Action Buttons: Simpan & Kirim ke Gmail */}
-              <div className="pt-4 flex flex-col sm:flex-row items-center justify-end gap-3 border-t border-slate-100">
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-200 cursor-pointer"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>Simpan Draf Data</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={(e) => handleSaveSubmission(e, true)}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-blue-700 to-sky-600 hover:from-blue-600 hover:to-sky-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all cursor-pointer"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>Kirim Penyerahan & Dapatkan Surat ke Gmail</span>
-                </button>
-              </div>
-            </form>
+              <label className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={agreePlagiarism}
+                  onChange={(e) => setAgreePlagiarism(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  required
+                />
+                <span className="text-xs text-slate-700 leading-relaxed">
+                  <strong className="text-blue-900">Pernyataan Orisinalitas & Etika Ilmiah *:</strong> Saya menyatakan bahwa naskah ini adalah karya asli saya, bebas plagiarisme, dan telah melewati uji similaritas Turnitin sesuai regulasi kampus.
+                </span>
+              </label>
+            </div>
           </div>
-        </ScrollReveal>
+
+          {/* Submit Action Buttons */}
+          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span className="text-xs text-slate-500 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-blue-600" />
+              <span>Dokumen diverifikasi langsung oleh Pustakawan Repositori UPA Perpustakaan</span>
+            </span>
+
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <button
+                type="submit"
+                className="w-full sm:w-auto px-8 py-3 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs shadow-md shadow-blue-700/20 transition-all cursor-pointer flex items-center justify-center gap-2"
+              >
+                <Check className="w-4 h-4" />
+                <span>{existingSkripsi ? 'Perbarui Data Naskah' : 'Simpan & Terbitkan Tanda Terima'}</span>
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
 
-      {/* Print Certificate Modal */}
+      {/* Modal Cetak Tanda Terima A4 */}
       {showPrintModal && (
         <PrintCertificateModal
           skripsiItem={activeSkripsiItem}

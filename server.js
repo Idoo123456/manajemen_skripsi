@@ -353,7 +353,7 @@ app.post('/api/send-certificate', async (req, res) => {
 
     res.json({
       success: true,
-      message: `Surat Bebas Pustaka resmi berhasil dikirim ke alamat ${email || 'Gmail Mahasiswa'}!`,
+      message: `Surat Tanda Terima Penyerahan Skripsi resmi berhasil dikirim ke alamat ${email || 'email mahasiswa'}!`,
       sentAt: formattedDate,
     });
   } catch (error) {
