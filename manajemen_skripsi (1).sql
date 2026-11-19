@@ -1,12 +1,11 @@
-
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2026 at 04:25 AM
--- Server version: 10.11.16-MariaDB
--- PHP Version: 8.5.12
+-- Generation Time: Nov 19, 2026 at 02:56 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `manajemen skripsi`
+-- Database: `manajemen_skripsi`
 --
 
 -- --------------------------------------------------------
@@ -181,20 +180,15 @@ CREATE TABLE `skripsi` (
   `no_surat` varchar(50) DEFAULT NULL,
   `nama` varchar(50) NOT NULL,
   `nim` varchar(20) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `email_sent_at` varchar(50) DEFAULT NULL,
   `id_fakultas` int(11) NOT NULL,
   `id_jurusan` int(11) NOT NULL,
   `judul` text NOT NULL,
   `hard_copy` int(11) NOT NULL,
   `soft_copy` int(11) NOT NULL,
-  `tanggal` varchar(20) NOT NULL
+  `tanggal` varchar(20) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `email_sent_at` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=COMPACT;
-
---
--- Data dummy untuk tabel `skripsi` telah dikosongkan.
--- Data akan diisi secara nyata melalui Formulir Bebas Pustaka.
---
 
 -- --------------------------------------------------------
 
@@ -302,6 +296,24 @@ CREATE TABLE `view_skripsi` (
 ,`jenis_dokumen` varchar(30)
 );
 
+-- --------------------------------------------------------
+
+--
+-- Structure for view `view_fakjur`
+--
+DROP TABLE IF EXISTS `view_fakjur`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_fakjur`  AS SELECT `jurusan`.`id_jurusan` AS `id_jurusan`, `jurusan`.`jurusan` AS `jurusan`, `jurusan`.`keterangan` AS `keterangan`, `fakultas`.`id_fakultas` AS `id_fakultas`, `fakultas`.`fakultas` AS `fakultas` FROM (`jurusan` join `fakultas`) WHERE `jurusan`.`id_fakultas` = `fakultas`.`id_fakultas` ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `view_skripsi`
+--
+DROP TABLE IF EXISTS `view_skripsi`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_skripsi`  AS SELECT `skripsi`.`id_skripsi` AS `id_skripsi`, `skripsi`.`id_jenis_dokumen` AS `id_jenis_dokumen`, `skripsi`.`nama` AS `nama`, `skripsi`.`nim` AS `nim`, `skripsi`.`id_fakultas` AS `id_fakultas`, `skripsi`.`id_jurusan` AS `id_jurusan`, `skripsi`.`judul` AS `judul`, `skripsi`.`hard_copy` AS `hard_copy`, `skripsi`.`soft_copy` AS `soft_copy`, `skripsi`.`tanggal` AS `tanggal`, `jurusan`.`jurusan` AS `jurusan`, `jurusan`.`keterangan` AS `ket_jurusan`, `fakultas`.`fakultas` AS `fakultas`, `fakultas`.`keterangan` AS `ket_fakultas`, `jenis_dokumen`.`jenis_dokumen` AS `jenis_dokumen` FROM (((`jurusan` join `fakultas`) join `skripsi`) join `jenis_dokumen`) WHERE `skripsi`.`id_fakultas` = `fakultas`.`id_fakultas` AND `skripsi`.`id_jurusan` = `jurusan`.`id_jurusan` AND `skripsi`.`id_jenis_dokumen` = `jenis_dokumen`.`id_jenis_dokumen` ;
+
 --
 -- Indexes for dumped tables
 --
@@ -387,7 +399,7 @@ ALTER TABLE `pelapor`
 -- AUTO_INCREMENT for table `skripsi`
 --
 ALTER TABLE `skripsi`
-  MODIFY `id_skripsi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id_skripsi` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tulisan`
@@ -400,24 +412,6 @@ ALTER TABLE `tulisan`
 --
 ALTER TABLE `users`
   MODIFY `idUser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_fakjur`
---
-DROP TABLE IF EXISTS `view_fakjur`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_fakjur`  AS SELECT `jurusan`.`id_jurusan` AS `id_jurusan`, `jurusan`.`jurusan` AS `jurusan`, `jurusan`.`keterangan` AS `keterangan`, `fakultas`.`id_fakultas` AS `id_fakultas`, `fakultas`.`fakultas` AS `fakultas` FROM (`jurusan` join `fakultas`) WHERE `jurusan`.`id_fakultas` = `fakultas`.`id_fakultas` ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `view_skripsi`
---
-DROP TABLE IF EXISTS `view_skripsi`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `view_skripsi`  AS SELECT `skripsi`.`id_skripsi` AS `id_skripsi`, `skripsi`.`id_jenis_dokumen` AS `id_jenis_dokumen`, `skripsi`.`nama` AS `nama`, `skripsi`.`nim` AS `nim`, `skripsi`.`id_fakultas` AS `id_fakultas`, `skripsi`.`id_jurusan` AS `id_jurusan`, `skripsi`.`judul` AS `judul`, `skripsi`.`hard_copy` AS `hard_copy`, `skripsi`.`soft_copy` AS `soft_copy`, `skripsi`.`tanggal` AS `tanggal`, `jurusan`.`jurusan` AS `jurusan`, `jurusan`.`keterangan` AS `ket_jurusan`, `fakultas`.`fakultas` AS `fakultas`, `fakultas`.`keterangan` AS `ket_fakultas`, `jenis_dokumen`.`jenis_dokumen` AS `jenis_dokumen` FROM (((`jurusan` join `fakultas`) join `skripsi`) join `jenis_dokumen`) WHERE `skripsi`.`id_fakultas` = `fakultas`.`id_fakultas` AND `skripsi`.`id_jurusan` = `jurusan`.`id_jurusan` AND `skripsi`.`id_jenis_dokumen` = `jenis_dokumen`.`id_jenis_dokumen` ;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

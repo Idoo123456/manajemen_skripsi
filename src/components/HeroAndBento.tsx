@@ -69,13 +69,13 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
         <ScrollReveal delay={100} direction="up">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-3xl sm:text-5xl md:text-5xl font-extrabold tracking-tight leading-[1.2] text-slate-900">
-              <span className="block text-slate-900">Sistem Penyerahan Karya Ilmiah &</span>
+              <span className="block text-slate-900">Sistem Informasi</span>
               <span className="text-[#004080]">
-                Surat Bebas Pustaka Online
+                Manajemen Skripsi & Tugas Akhir
               </span>
             </h1>
             <p className="mt-4 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Portal repositori digital resmi untuk penyerahan naskah tugas akhir, skripsi, tesis, serta penerbitan Surat Keterangan Bebas Pustaka terintegrasi UPA Perpustakaan Universitas Riau.
+              Pusat repositori naskah akademik, pengelolaan berkas skripsi, serta penerbitan tanda terima penyerahan karya ilmiah resmi UPA Perpustakaan Universitas Riau.
             </p>
 
             {/* Interactive Search Bar */}
@@ -87,7 +87,7 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Cari berdasarkan NIM, Nama Mahasiswa, atau Judul Skripsi..."
+                    placeholder="Cari naskah berdasarkan NIM, Nama Mahasiswa, atau Judul Skripsi..."
                     className="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none px-2 py-2"
                   />
                   {searchQuery && (
@@ -102,7 +102,7 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                     onClick={onExploreClick}
                     className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#004080] hover:bg-[#003366] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
                   >
-                    <span>Telusuri</span>
+                    <span>Cari Skripsi</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -124,7 +124,7 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                 ) : (
                   <span className="flex items-center gap-1.5 font-medium text-slate-500">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block" />
-                    Katalog repositori terhubung langsung ke pangkalan data UPA Perpustakaan
+                    Katalog naskah skripsi terhubung langsung ke pangkalan data UPA Perpustakaan
                   </span>
                 )}
               </div>
@@ -137,7 +137,7 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#004080] hover:bg-[#003366] text-white text-xs font-bold transition-all shadow-sm cursor-pointer"
               >
                 <FileCheck2 className="w-4 h-4 text-sky-200" />
-                <span>Formulir Bebas Pustaka</span>
+                <span>Penyerahan Skripsi Online</span>
                 <ChevronRight className="w-3.5 h-3.5 text-sky-200" />
               </button>
               <button
@@ -145,7 +145,7 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-bold text-slate-700 transition-all shadow-xs cursor-pointer"
               >
                 <Search className="w-4 h-4 text-blue-700" />
-                <span>Lacak Status & Resi Digital</span>
+                <span>Lacak Status Naskah</span>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               </button>
               <button
@@ -153,7 +153,7 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-semibold text-slate-700 transition-all shadow-xs cursor-pointer"
               >
                 <BookMarked className="w-4 h-4 text-blue-700" />
-                <span>Panduan Penyerahan</span>
+                <span>Panduan Naskah</span>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               </button>
             </div>

@@ -268,31 +268,25 @@ export const StudentPortal: React.FC = () => {
             <div className="space-y-2.5 max-w-3xl">
               <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold bg-white/10 text-white border border-white/20">
                 <FileCheck2 className="w-3.5 h-3.5 text-sky-300" />
-                <span>Formulir Penyerahan Tugas Akhir & Permohonan Bebas Pustaka</span>
+                <span>SIM-SKRIPSI • Layanan Penyerahan Naskah Akademik</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
-                Penyerahan Karya Ilmiah & Surat Bebas Pustaka Online
+                Penyerahan Mandiri Naskah Skripsi & Tugas Akhir
               </h1>
               <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
-                Formulir resmi Unit Penunjang Akademik (UPA) Perpustakaan Universitas Riau untuk penyerahan naskah skripsi, tesis, dan tugas akhir mahasiswa tingkat akhir sebagai kelengkapan berkas yudisium dan wisuda.
+                Formulir resmi UPA Perpustakaan Universitas Riau untuk pengumpulan, pengesahan, dan pengarsipan naskah skripsi, tesis, serta penerbitan tanda terima penyerahan karya ilmiah mahasiswa.
               </p>
             </div>
 
-            {/* Database Status Indicator */}
-            <div className="flex flex-col gap-2 shrink-0 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20">
-              <span className="text-[11px] font-bold text-blue-100 uppercase tracking-wider flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                <span>Status Basis Data:</span>
+            {/* Ketentuan Ringkas Layanan */}
+            <div className="hidden lg:flex flex-col gap-1.5 shrink-0 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 text-xs text-blue-100 max-w-xs">
+              <span className="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-sky-300" />
+                <span>Ketentuan Berkas</span>
               </span>
-              <div className="text-xs text-white/90">
-                <p className="font-semibold flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
-                  <span>Terhubung ke MySQL (manajemen_skripsi)</span>
-                </p>
-                <p className="text-[11px] text-blue-200 mt-1 max-w-[260px]">
-                  Ketik NIM Anda untuk mengecek status pinjaman sirkulasi buku secara langsung.
-                </p>
-              </div>
+              <p className="text-[11px] leading-relaxed text-blue-100/90">
+                Naskah skripsi wajib memuat lembar pengesahan dewan penguji dan berkas softcopy PDF lengkap sebelum tanda terima penyerahan diterbitkan.
+              </p>
             </div>
           </div>
         </div>
@@ -301,37 +295,37 @@ export const StudentPortal: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
         
         {/* ======================================================== */}
-        {/* LEFT COLUMN: STATUS SIRKULASI & SURAT BEBAS PUSTAKA      */}
+        {/* LEFT COLUMN: STATUS KELENGKAPAN & TANDA TERIMA NASKAH    */}
         {/* ======================================================== */}
         <ScrollReveal delay={100} direction="up" className="lg:col-span-1">
           <div className="flex flex-col gap-6">
           
-          {/* KARTU 1: STATUS PINJAMAN KOLEKSI REALTIME */}
+          {/* KARTU 1: STATUS KELAYAKAN PENYERAHAN NASKAH */}
           <div
             className={`p-5 sm:p-6 rounded-3xl border shadow-sm transition-all duration-300 ${
               !hasEnteredNim
                 ? 'bg-slate-50/90 border-slate-200/90 shadow-slate-100/50'
-                : pinjamCount > 0
+                : !isLoanClear
                 ? 'bg-rose-50/70 border-rose-200 shadow-rose-100/50'
                 : 'bg-emerald-50/70 border-emerald-200 shadow-emerald-100/50'
             }`}
           >
             <div className="flex items-center justify-between pb-4 border-b border-slate-200/60">
               <span className="text-xs font-bold tracking-wider uppercase text-slate-600">
-                STATUS SIRKULASI PERPUSTAKAAN
+                STATUS KELENGKAPAN SKRIPSI
               </span>
               <div
                 className={`p-2 rounded-xl ${
                   !hasEnteredNim
                     ? 'bg-slate-200/70 text-slate-500 border border-slate-300'
-                    : pinjamCount > 0
+                    : !isLoanClear
                     ? 'bg-rose-100 text-rose-700 border border-rose-200'
                     : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
                 }`}
               >
                 {!hasEnteredNim ? (
                   <Clock className="w-5 h-5 text-slate-500" />
-                ) : pinjamCount > 0 ? (
+                ) : !isLoanClear ? (
                   <BookX className="w-5 h-5" />
                 ) : (
                   <BookCheck className="w-5 h-5" />
@@ -345,7 +339,7 @@ export const StudentPortal: React.FC = () => {
                   <div className="flex items-baseline gap-2">
                     <span className="text-4xl font-black text-slate-400">—</span>
                     <span className="text-sm font-bold text-slate-600">
-                      Menunggu Input NIM Mahasiswa
+                      Menunggu Input NIM Penulis
                     </span>
                   </div>
 
@@ -355,14 +349,14 @@ export const StudentPortal: React.FC = () => {
                       <span>Belum Ada NIM Terisi</span>
                     </div>
                     <p>
-                      Silakan ketik <strong>NIM Anda</strong> pada formulir di sebelah kanan. Sistem akan memeriksa catatan peminjaman buku perpustakaan secara otomatis begitu NIM diisi.
+                      Silakan ketik <strong>NIM Anda</strong> pada formulir di sebelah kanan. Sistem akan memuat data naskah dan memeriksa catatan bebas sirkulasi perpustakaan secara otomatis.
                     </p>
                     <p className="text-[11px] text-slate-400">
-                      Status sirkulasi: <strong className="text-slate-500">BELUM TERVERIFIKASI</strong>.
+                      Status berkas: <strong className="text-slate-500">BELUM TERDAFTAR</strong>.
                     </p>
                   </div>
                 </>
-              ) : pinjamCount > 0 ? (
+              ) : !isLoanClear ? (
                 <>
                   <div className="flex items-baseline gap-2">
                     <span className="text-4xl font-black text-rose-600">{pinjamCount}</span>
@@ -372,33 +366,33 @@ export const StudentPortal: React.FC = () => {
                   <div className="mt-4 p-4 rounded-2xl bg-white border border-rose-200 text-rose-900 text-xs leading-relaxed space-y-2 shadow-sm">
                     <div className="flex items-center gap-1.5 font-bold text-rose-700">
                       <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-                      <span>Peringatan Tanggungan Aktif!</span>
+                      <span>Tanggungan Sirkulasi Aktif</span>
                     </div>
                     <p>
-                      NIM <strong>{nim}</strong> masih tercatat meminjam <strong>{pinjamCount} buku</strong> di perpustakaan UNRI.
+                      NIM <strong>{nim}</strong> masih memiliki tanggungan peminjaman <strong>{pinjamCount} buku</strong> di perpustakaan UNRI.
                     </p>
                     <p className="text-[11px] text-slate-500">
-                      Sistem mengunci penerbitan surat resmi sampai buku dikembalikan ke meja layanan sirkulasi.
+                      Kembalikan buku pinjaman ke loket sirkulasi agar tanda terima resmi penyerahan skripsi dapat diterbitkan.
                     </p>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-4xl font-black text-emerald-600">0</span>
-                    <span className="text-sm font-bold text-slate-700">Tanggungan Koleksi (Bebas)</span>
+                    <span className="text-4xl font-black text-emerald-600">Siap</span>
+                    <span className="text-sm font-bold text-slate-700">Verifikasi Naskah Skripsi</span>
                   </div>
 
                   <div className="mt-4 p-4 rounded-2xl bg-white border border-emerald-200 text-emerald-900 text-xs leading-relaxed space-y-2 shadow-sm">
                     <div className="flex items-center gap-1.5 font-bold text-emerald-700">
                       <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>Lolos Verifikasi Bebas Pustaka!</span>
+                      <span>Bebas Tanggungan Sirkulasi!</span>
                     </div>
                     <p>
-                      Tidak ditemukan tanggungan peminjaman buku maupun denda pada akun NIM <strong>{nim}</strong>.
+                      Akun NIM <strong>{nim}</strong> bersih dari tanggungan pinjaman buku. Naskah skripsi siap diproses dan diarsipkan.
                     </p>
                     <p className="text-[11px] text-slate-500">
-                      Status sirkulasi: <strong className="text-emerald-700">HIJAU (TERVERIFIKASI)</strong>.
+                      Status administrasi: <strong className="text-emerald-700">MEMENUHI SYARAT</strong>.
                     </p>
                   </div>
                 </>
@@ -409,18 +403,18 @@ export const StudentPortal: React.FC = () => {
               <UserCheck className="w-3.5 h-3.5 text-blue-600 shrink-0" />
               <span>
                 {hasEnteredNim
-                  ? 'Data peminjaman diverifikasi secara realtime dari basis data perpustakaan.'
-                  : 'Sistem siap memverifikasi data sirkulasi perpustakaan secara otomatis.'}
+                  ? 'Data naskah dan keanggotaan terhubung langsung dengan basis data perpustakaan.'
+                  : 'Sistem siap memverifikasi data penyerahan skripsi secara otomatis.'}
               </span>
             </div>
           </div>
 
-          {/* KARTU 2: PENERBITAN SURAT & PENGIRIMAN GMAIL */}
+          {/* KARTU 2: PENERBITAN TANDA TERIMA PENYERAHAN SKRIPSI */}
           <div className="p-5 sm:p-6 rounded-3xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                 <span className="text-xs font-bold tracking-wider uppercase text-slate-600">
-                  SURAT KETERANGAN BEBAS PUSTAKA
+                  TANDA TERIMA PENYERAHAN SKRIPSI
                 </span>
                 <div className="p-2 rounded-xl bg-blue-50 text-blue-700 border border-blue-100">
                   <Mail className="w-5 h-5" />
@@ -436,10 +430,10 @@ export const StudentPortal: React.FC = () => {
                     </div>
                     <div className="space-y-1.5">
                       <h3 className="text-sm font-bold text-slate-800">
-                        Menunggu Input NIM Mahasiswa
+                        Menunggu Data Penyerahan Naskah
                       </h3>
                       <p className="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">
-                        Surat Keterangan Bebas Pustaka baru dapat diterbitkan setelah Anda mengisi <strong>NIM</strong> dan melengkapi data penyerahan karya ilmiah pada formulir di sebelah kanan.
+                        Tanda Terima Penyerahan Skripsi resmi baru dapat diterbitkan setelah Anda melengkapi data karya ilmiah pada formulir di sebelah kanan.
                       </p>
                     </div>
                   </div>
@@ -447,13 +441,13 @@ export const StudentPortal: React.FC = () => {
                   <div className="p-4 rounded-2xl bg-white border border-slate-200 space-y-2.5 text-xs text-slate-600">
                     <div className="font-bold text-slate-700 flex items-center gap-1.5 text-[11px] uppercase tracking-wide">
                       <Info className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                      <span>Alur Penerbitan Surat:</span>
+                      <span>Alur Penyerahan Naskah:</span>
                     </div>
                     <ul className="space-y-1.5 text-[11.5px] text-slate-600 list-disc list-inside">
-                      <li>Ketik NIM pada formulir penyerahan.</li>
-                      <li>Sistem otomatis mengecek sirkulasi pinjaman buku.</li>
-                      <li>Unggah softcopy skripsi & konfirmasi hardcopy.</li>
-                      <li>Surat resmi otomatis diterbitkan dan siap diunduh/dicetak.</li>
+                      <li>Ketik NIM untuk memuat data penulis.</li>
+                      <li>Unggah naskah softcopy PDF & konfirmasi hardcopy.</li>
+                      <li>Kirim formulir untuk mencatat ke basis data repositori.</li>
+                      <li>Unduh / Cetak Bukti Tanda Terima resmi penyerahan skripsi.</li>
                     </ul>
                   </div>
                 </div>
@@ -461,10 +455,10 @@ export const StudentPortal: React.FC = () => {
                 /* TAMPILAN KETIKA NIM SUDAH DIISI */
                 <div className="mt-4 space-y-3">
                   <h3 className="text-base font-bold text-slate-900">
-                    Surat Resmi & Pengiriman Digital
+                    Bukti Sah Penyerahan Karya Ilmiah
                   </h3>
                   <p className="text-xs text-slate-500 leading-relaxed">
-                    Surat resmi ber-kop UPA Perpustakaan Universitas Riau dikirim otomatis dalam format PDF resmi ke Gmail dan siap dicetak fisik ukuran A4.
+                    Surat resmi ber-kop UPA Perpustakaan Universitas Riau ber-Nomor Surat resmi untuk kelengkapan berkas yudisium dan pendaftaran wisuda.
                   </p>
 
                   {/* Requirements Checklist */}
@@ -477,7 +471,7 @@ export const StudentPortal: React.FC = () => {
                         ) : (
                           <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
                         )}
-                        <span>1. Hardcopy Skripsi</span>
+                        <span>1. Jilid Hardcopy Skripsi</span>
                       </span>
                       <span
                         className={`font-bold ${
@@ -496,7 +490,7 @@ export const StudentPortal: React.FC = () => {
                         ) : (
                           <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
                         )}
-                        <span>2. Softcopy PDF Digital</span>
+                        <span>2. Berkas Softcopy PDF</span>
                       </span>
                       <span
                         className={`font-bold ${
@@ -515,7 +509,7 @@ export const StudentPortal: React.FC = () => {
                         ) : (
                           <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
                         )}
-                        <span>3. Bebas Pinjaman Buku</span>
+                        <span>3. Bebas Pinjaman Koleksi</span>
                       </span>
                       <span
                         className={`font-bold ${
@@ -534,7 +528,7 @@ export const StudentPortal: React.FC = () => {
                     <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
                       <div className="flex items-center gap-1.5 font-bold">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                        <span>Surat Telah Terkirim ke Gmail:</span>
+                        <span>Tanda Terima Telah Terkirim ke Gmail:</span>
                       </div>
                       <div className="text-[11px] text-slate-600 mt-1.5">
                         Penerima: <strong className="text-blue-800 font-semibold">{activeSkripsiItem.email}</strong>
@@ -578,7 +572,7 @@ export const StudentPortal: React.FC = () => {
                   }`}
                 >
                   <Send className="w-4 h-4 text-blue-600" />
-                  <span>{isSendingEmail ? 'Mengirim Surat ke Gmail...' : 'Kirim Salinan Surat ke Gmail'}</span>
+                  <span>{isSendingEmail ? 'Mengirim Surat ke Gmail...' : 'Kirim Tanda Terima ke Gmail'}</span>
                 </button>
 
                 {/* Button: Cetak Fisik A4 */}
@@ -593,13 +587,13 @@ export const StudentPortal: React.FC = () => {
                 >
                   <Printer className="w-4 h-4" />
                   <span>
-                    {isEligibleToPrint ? 'Cetak Fisik Surat Resmi (A4)' : 'Pratinjau Format Cetak (A4)'}
+                    {isEligibleToPrint ? 'Cetak Tanda Terima Penyerahan (A4)' : 'Pratinjau Format Cetak (A4)'}
                   </span>
                 </button>
 
                 {!isEligibleToPrint && (
                   <p className="text-[10px] text-center text-slate-400">
-                    *Surat resmi dapat dicetak setelah hardcopy, softcopy, dan bebas sirkulasi terpenuhi.
+                    *Tanda terima dapat dicetak setelah berkas hardcopy, softcopy, dan bebas sirkulasi terpenuhi.
                   </p>
                 )}
               </div>

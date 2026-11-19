@@ -310,12 +310,12 @@ export const RepositoryTable: React.FC<RepositoryTableProps> = ({
                     <FileText className="w-12 h-12 mx-auto text-slate-300 mb-3" />
                     <p className="text-base font-bold text-slate-800">
                       {skripsi.length === 0
-                        ? 'Basis Data Repositori Masih Kosong'
+                        ? 'Repositori Belum Memiliki Data'
                         : 'Tidak ada karya ilmiah yang sesuai filter.'}
                     </p>
                     <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
                       {skripsi.length === 0
-                        ? 'Belum ada karya ilmiah yang tersimpan di basis data MySQL. Ajukan berkas tugas akhir Anda melalui Formulir Bebas Pustaka untuk mulai mengisi repositori.'
+                        ? 'Belum ada karya ilmiah yang terdaftar di repositori. Ajukan berkas tugas akhir Anda melalui Formulir Bebas Pustaka untuk mulai mengisi repositori.'
                         : 'Coba ubah kata kunci pencarian atau sesuaikan filter fakultas/jurusan.'}
                     </p>
                     {skripsi.length === 0 && (

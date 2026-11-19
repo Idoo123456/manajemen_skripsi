@@ -108,13 +108,13 @@ export const TrackingView: React.FC = () => {
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-900 text-xs font-bold shadow-xs">
               <ShieldCheck className="w-4 h-4 text-blue-700" />
-              <span>Sistem Pelacakan Status & Resi Digital Bebas Pustaka</span>
+              <span>SIM-SKRIPSI • Pelacakan Status Penyerahan Karya Ilmiah</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              Lacak Status Pengajuan & Resi Digital
+              Pelacakan Status Berkas Skripsi Mahasiswa
             </h1>
             <p className="text-sm sm:text-base text-slate-600">
-              Pantau linimasa verifikasi berkas, status bebas pinjaman buku perpustakaan, serta unduh tanda terima dan Surat Keterangan Bebas Pustaka secara mandiri tanpa harus login.
+              Pantau linimasa verifikasi naskah hardcopy & softcopy digital, status bebas tanggungan perpustakaan, serta unduh bukti tanda terima penyerahan skripsi secara mandiri.
             </p>
           </div>
         </ScrollReveal>
@@ -146,7 +146,7 @@ export const TrackingView: React.FC = () => {
             <div className="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 text-xs text-slate-500">
               <span className="flex items-center gap-1.5 font-medium">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Data terhubung langsung dengan basis data MySQL UPA Perpustakaan UNRI.
+                Layanan pelacakan status penyerahan resmi UPA Perpustakaan UNRI.
               </span>
               <span className="text-[11px] text-slate-400">
                 Pencarian dapat menggunakan NIM yang diajukan pada formulir penyerahan.

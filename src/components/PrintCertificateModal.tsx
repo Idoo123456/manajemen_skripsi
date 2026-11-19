@@ -206,9 +206,12 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
             {/* Judul Surat Resmi */}
             <div className="text-center my-6">
               <h2 className="text-[15px] font-bold uppercase tracking-wide font-serif text-black underline underline-offset-4 decoration-1">
-                SURAT KETERANGAN BEBAS PUSTAKA & PENYERAHAN KARYA ILMIAH
+                SURAT TANDA TERIMA PENYERAHAN SKRIPSI / KARYA ILMIAH
               </h2>
-              <p className="text-[12.5px] font-serif font-medium mt-1.5 text-neutral-900">
+              <p className="text-[12px] font-serif uppercase tracking-wider text-black font-semibold mt-0.5">
+                DAN SURAT KETERANGAN BEBAS PERPUSTAKAAN
+              </p>
+              <p className="text-[12.5px] font-serif font-medium mt-1 text-neutral-900">
                 Nomor: <span className="font-serif font-bold text-black">{skripsiItem.no_surat || '002/SKR/FT/2024'}</span>
               </p>
             </div>

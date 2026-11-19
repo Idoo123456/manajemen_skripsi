@@ -38,7 +38,7 @@ export const Navbar: React.FC = () => {
                 UPA PERPUSTAKAAN
               </span>
               <span className="text-[10px] sm:text-[11px] text-slate-500 font-semibold leading-tight mt-0.5">
-                SIM Skripsi & Bebas Pustaka
+                SIM-Skripsi & Repositori Ilmiah
               </span>
             </div>
           </div>
@@ -54,7 +54,7 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <Home className="w-3.5 h-3.5" />
-              <span>Beranda & Repositori</span>
+              <span>Katalog Skripsi</span>
             </button>
 
             <button
@@ -66,7 +66,7 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <FileCheck2 className="w-3.5 h-3.5 shrink-0" />
-              <span>Formulir Bebas Pustaka</span>
+              <span>Penyerahan Skripsi</span>
             </button>
 
             <button
@@ -78,7 +78,7 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <Search className="w-3.5 h-3.5" />
-              <span>Lacak Pengajuan</span>
+              <span>Lacak Status Naskah</span>
             </button>
 
             <button
@@ -90,7 +90,7 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <BookMarked className="w-3.5 h-3.5" />
-              <span>Panduan</span>
+              <span>Panduan Naskah</span>
             </button>
           </nav>
 
@@ -101,7 +101,7 @@ export const Navbar: React.FC = () => {
               className="hidden sm:inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl bg-[#004080] hover:bg-[#003366] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
             >
               <FileCheck2 className="w-3.5 h-3.5 text-sky-300" />
-              <span>Ajukan Bebas Pustaka</span>
+              <span>Unggah Naskah Skripsi</span>
             </button>
 
             {/* Mobile / Tablet Hamburger Button */}
@@ -132,7 +132,7 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <Home className="w-4 h-4 text-blue-600" />
-              <span>Beranda & Repositori</span>
+              <span>Katalog Skripsi</span>
             </button>
 
             <button
@@ -146,7 +146,7 @@ export const Navbar: React.FC = () => {
             >
               <span className="flex items-center gap-2.5">
                 <FileCheck2 className="w-4 h-4 text-blue-600" />
-                <span>Formulir Bebas Pustaka</span>
+                <span>Penyerahan Skripsi</span>
               </span>
               <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">
                 Online
@@ -164,7 +164,7 @@ export const Navbar: React.FC = () => {
             >
               <span className="flex items-center gap-2.5">
                 <Search className="w-4 h-4 text-blue-600" />
-                <span>Lacak Status & Resi Digital</span>
+                <span>Lacak Status Naskah</span>
               </span>
               <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
                 Realtime
@@ -181,7 +181,7 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <BookMarked className="w-4 h-4 text-blue-600" />
-              <span>Panduan & Standar Dokumen</span>
+              <span>Panduan Naskah</span>
             </button>
 
             <div className="pt-2 border-t border-slate-100">

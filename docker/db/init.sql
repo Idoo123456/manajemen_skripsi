@@ -45,16 +45,16 @@ CREATE TABLE IF NOT EXISTS `fakultas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `fakultas` (`id_fakultas`, `fakultas`, `keterangan`) VALUES
-(1, 'Teknik', 'Fakultas Teknik Universitas Riau'),
-(2, 'Matematika dan Ilmu Pengetahuan Alam', 'FMIPA Universitas Riau'),
-(3, 'Ekonomi dan Bisnis', 'FEB Universitas Riau'),
-(4, 'Ilmu Sosial dan Ilmu Politik', 'FISIP Universitas Riau'),
-(5, 'Keguruan dan Ilmu Pendidikan', 'FKIP Universitas Riau'),
-(6, 'Perikanan dan Kelautan', 'FPK Universitas Riau'),
-(7, 'Pertanian', 'FP Universitas Riau'),
-(8, 'Kedokteran', 'FK Universitas Riau'),
-(9, 'Hukum', 'FH Universitas Riau'),
-(10, 'Keperawatan', 'FKp Universitas Riau');
+(1, 'Fakultas Teknik', 'FT Universitas Riau'),
+(2, 'Fakultas Matematika dan IPA', 'FMIPA Universitas Riau'),
+(3, 'Fakultas Ekonomi dan Bisnis', 'FEB Universitas Riau'),
+(4, 'Fakultas Keguruan dan Ilmu Pendidikan', 'FKIP Universitas Riau'),
+(5, 'Fakultas Ilmu Sosial dan Ilmu Politik', 'FISIP Universitas Riau'),
+(6, 'Fakultas Pertanian', 'FP Universitas Riau'),
+(7, 'Fakultas Perikanan dan Kelautan', 'FPK Universitas Riau'),
+(8, 'Fakultas Hukum', 'FH Universitas Riau'),
+(9, 'Fakultas Kedokteran', 'FK Universitas Riau'),
+(10, 'Fakultas Keperawatan', 'FKp Universitas Riau');
 
 -- --------------------------------------------------------
 -- Table structure for table `jenis_dokumen`
@@ -62,21 +62,21 @@ INSERT INTO `fakultas` (`id_fakultas`, `fakultas`, `keterangan`) VALUES
 CREATE TABLE IF NOT EXISTS `jenis_dokumen` (
   `id_jenis_dokumen` int(11) NOT NULL AUTO_INCREMENT,
   `jenis_dokumen` varchar(30) NOT NULL,
-  `keterangan` varchar(50) NOT NULL,
+  `keterangan_jenis_dokumen` varchar(150) NOT NULL,
   PRIMARY KEY (`id_jenis_dokumen`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `jenis_dokumen` (`id_jenis_dokumen`, `jenis_dokumen`, `keterangan`) VALUES
-(1, 'Skripsi (S1)', 'Karya Ilmiah Program Sarjana S1'),
-(2, 'Tesis (S2)', 'Karya Ilmiah Program Magister S2'),
-(3, 'Disertasi (S3)', 'Karya Ilmiah Program Doktoral S3'),
-(4, 'Tugas Akhir (D3)', 'Karya Akhir Program Diploma Tiga'),
-(5, 'Laporan Magang / Praktik Kerja', 'Laporan Kerja Praktik Industri'),
-(6, 'Artikel Jurnal Ilmiah', 'Publikasi Jurnal Terindeks'),
-(7, 'Prosiding Seminar', 'Naskah Prosiding Konferensi Ilmiah'),
-(8, 'Laporan Penelitian Dosen', 'Laporan Hibah Penelitian LPPM'),
-(9, 'Buku Monograf', 'Koleksi Monograf Perpustakaan'),
-(10, 'Karya Ilmiah Lainnya', 'Dokumen Akademik Lainnya');
+INSERT INTO `jenis_dokumen` (`id_jenis_dokumen`, `jenis_dokumen`, `keterangan_jenis_dokumen`) VALUES
+(1, 'Skripsi', 'Karya Tulis Ilmiah Sarjana (S1)'),
+(2, 'Tugas Akhir', 'Tugas Akhir Program Diploma (D3)'),
+(3, 'Tesis', 'Karya Tulis Ilmiah Magister (S2)'),
+(4, 'Disertasi', 'Karya Tulis Ilmiah Doktoral (S3)'),
+(5, 'Laporan PKL', 'Laporan Praktik Kerja Lapangan'),
+(6, 'Artikel Jurnal', 'Publikasi Jurnal Ilmiah Mahasiswa'),
+(7, 'Prosiding Seminar', 'Artikel Prosiding Konferensi Ilmiah'),
+(8, 'Laporan Riset', 'Laporan Hasil Riset dan Penelitian'),
+(9, 'Buku Monograf', 'Karya Tulis Ilmiah Buku Monograf'),
+(10, 'Karya Inovasi Paten', 'Dokumen Paten & Hak Cipta Mahasiswa');
 
 -- --------------------------------------------------------
 -- Table structure for table `jurusan`
@@ -84,51 +84,51 @@ INSERT INTO `jenis_dokumen` (`id_jenis_dokumen`, `jenis_dokumen`, `keterangan`) 
 CREATE TABLE IF NOT EXISTS `jurusan` (
   `id_jurusan` int(11) NOT NULL AUTO_INCREMENT,
   `id_fakultas` int(11) NOT NULL,
-  `jurusan` varchar(50) NOT NULL,
-  `keterangan` varchar(100) NOT NULL,
+  `jurusan` varchar(150) NOT NULL,
+  `keterangan` varchar(150) NOT NULL,
   PRIMARY KEY (`id_jurusan`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `jurusan` (`id_jurusan`, `id_fakultas`, `jurusan`, `keterangan`) VALUES
-(1, 1, 'Teknik Informatika', 'Jurusan Teknik Informatika S1'),
-(2, 1, 'Teknik Sipil', 'Jurusan Teknik Sipil S1'),
-(3, 1, 'Teknik Elektro', 'Jurusan Teknik Elektro S1'),
-(4, 1, 'Teknik Mesin', 'Jurusan Teknik Mesin S1'),
-(5, 1, 'Teknik Kimia', 'Jurusan Teknik Kimia S1'),
-(6, 2, 'Sistem Informasi', 'Jurusan Sistem Informasi S1 FMIPA'),
-(7, 2, 'Matematika', 'Jurusan Matematika S1 FMIPA'),
-(8, 2, 'Fisika', 'Jurusan Fisika S1 FMIPA'),
-(9, 2, 'Kimia', 'Jurusan Kimia S1 FMIPA'),
-(10, 2, 'Biologi', 'Jurusan Biologi S1 FMIPA');
+(1, 1, 'Teknik Informatika', 'Program Studi S1 Teknik Informatika FT'),
+(2, 1, 'Teknik Elektro', 'Program Studi S1 Teknik Elektro FT'),
+(3, 1, 'Teknik Mesin', 'Program Studi S1 Teknik Mesin FT'),
+(4, 2, 'Sistem Informasi', 'Program Studi S1 Sistem Informasi FMIPA'),
+(5, 2, 'Ilmu Komputer', 'Program Studi S1 Ilmu Komputer FMIPA'),
+(6, 2, 'Matematika', 'Program Studi S1 Matematika FMIPA'),
+(7, 3, 'Manajemen', 'Program Studi S1 Manajemen FEB'),
+(8, 3, 'Akuntansi', 'Program Studi S1 Akuntansi FEB'),
+(9, 4, 'Pendidikan Bahasa Inggris', 'Program Studi S1 Pend. Bhs Inggris FKIP'),
+(10, 5, 'Ilmu Komunikasi', 'Program Studi S1 Ilmu Komunikasi FISIP');
 
 -- --------------------------------------------------------
 -- Table structure for table `pelapor`
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pelapor` (
   `id_pelapor` int(11) NOT NULL AUTO_INCREMENT,
-  `nama_pelapor` varchar(50) NOT NULL,
-  `nip` varchar(30) NOT NULL,
-  `keterangan` varchar(50) NOT NULL,
-  `paraf` varchar(50) NOT NULL,
-  `ttd` varchar(50) NOT NULL,
-  `aktif` int(11) NOT NULL DEFAULT 1,
+  `nama_pelapor` varchar(30) NOT NULL,
+  `nip_pelapor` varchar(20) NOT NULL,
+  `jabatan_pelapor` varchar(30) NOT NULL,
+  `ttd_url` text DEFAULT NULL,
+  `ttd_file_name` varchar(200) DEFAULT NULL,
+  `active` int(11) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_pelapor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `pelapor` (`id_pelapor`, `nama_pelapor`, `nip`, `keterangan`, `paraf`, `ttd`, `aktif`) VALUES
-(1, 'Dr. H. Hendro Prasetyo, M.Lib.', '197508122002121003', 'Kepala UPA Perpustakaan UNRI', 'paraf_kepala.png', 'ttd_kepala.png', 1),
-(2, 'Nurhasanah, S.Sos., M.IP.', '198204152008122001', 'Koordinator Layanan Sirkulasi & Referensi', 'paraf_nur.png', 'ttd_nur.png', 1),
-(3, 'Bambang Irawan, S.Kom.', '198809202014031002', 'Staf Pengolahan & Repositori Digital', 'paraf_bambang.png', 'ttd_bambang.png', 1),
-(4, 'Siti Aminah, A.Md.', '199101052019032014', 'Petugas Verifikasi Bebas Pustaka', 'paraf_siti.png', 'ttd_siti.png', 1),
-(5, 'Ahmad Fauzi, S.Hum.', '198906102015041001', 'Layanan Sirkulasi & Pengembalian Buku', 'paraf_fauzi.png', 'ttd_fauzi.png', 1),
-(6, 'Rina Marlina, S.I.Pust.', '199003182018012003', 'Staf Otomasi & Sistem Informasi', 'paraf_rina.png', 'ttd_rina.png', 1),
-(7, 'Eko Wahyudi, S.T.', '198711252012121004', 'Administrator Pangkalan Data Repositori', 'paraf_eko.png', 'ttd_eko.png', 1),
-(8, 'Dewi Sartika, S.Sos.', '199208032020122009', 'Layanan Koleksi Khusus & Tandon', 'paraf_dewi.png', 'ttd_dewi.png', 1),
-(9, 'Ir. M. Ridwan, M.T.', '197905142006041005', 'Wakil Dekan Bidang Akademik', 'paraf_ridwan.png', 'ttd_ridwan.png', 1),
+INSERT INTO `pelapor` (`id_pelapor`, `nama_pelapor`, `nip_pelapor`, `jabatan_pelapor`, `ttd_url`, `ttd_file_name`, `active`) VALUES
+(1, 'Hendra Wijaya, S.Sos., M.IP.', '197803152003121002', 'Koordinator Repositori', 'ttd_hendra.png', 'ttd_hendra.png', 1),
+(2, 'Nurul Hidayati, S.I.Pust.', '198406202008012005', 'Pustakawan Verifikator', 'ttd_nurul.png', 'ttd_nurul.png', 1),
+(3, 'Drs. Supriyanto, M.Si.', '196908121994031001', 'Kepala Bidang Layanan', 'ttd_supri.png', 'ttd_supri.png', 1),
+(4, 'Rina Marlina, A.Md.Pust.', '198711222010012003', 'Staf Administrasi Skripsi', 'ttd_rina.png', 'ttd_rina.png', 1),
+(5, 'Bambang Irawan, S.Kom.', '199001152015021004', 'Operator Data Repositori', 'ttd_bambang.png', 'ttd_bambang.png', 1),
+(6, 'Dewi Sartika, S.Hum.', '198904102014032002', 'Pustakawan Pengolahan', 'ttd_dewi.png', 'ttd_dewi.png', 1),
+(7, 'Faisal Akbar, S.T.', '199207082019031005', 'Teknisi Sistem Informasi', 'ttd_faisal.png', 'ttd_faisal.png', 1),
+(8, 'Yuliana Sari, S.Pd.', '198603252009022004', 'Pustakawan Referensi', 'ttd_yuliana.png', 'ttd_yuliana.png', 1),
+(9, 'Agus Setiawan, S.IP.', '198112052006041003', 'Verifikator Bebas Pustaka', 'ttd_agus.png', 'ttd_agus.png', 1),
 (10, 'Fitri Ramadhani, S.Sos.', '199302142020122006', 'Sekretariat Repositori', 'ttd_fitri.png', 'ttd_fitri.png', 1);
 
 -- --------------------------------------------------------
--- Table structure for table `skripsi` (Tabel Transaksi Utama)
+-- Table structure for table `skripsi` (Tabel Transaksi Utama - 0 Rows)
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `skripsi` (
   `id_skripsi` int(11) NOT NULL AUTO_INCREMENT,
@@ -136,14 +136,14 @@ CREATE TABLE IF NOT EXISTS `skripsi` (
   `no_surat` varchar(50) DEFAULT NULL,
   `nama` varchar(50) NOT NULL,
   `nim` varchar(20) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `email_sent_at` varchar(50) DEFAULT NULL,
   `id_fakultas` int(11) NOT NULL,
   `id_jurusan` int(11) NOT NULL,
   `judul` text NOT NULL,
   `hard_copy` int(11) NOT NULL DEFAULT 0,
   `soft_copy` int(11) NOT NULL DEFAULT 0,
   `tanggal` varchar(20) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `email_sent_at` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id_skripsi`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -158,19 +158,19 @@ CREATE TABLE IF NOT EXISTS `tulisan` (
   `Aktif` int(11) NOT NULL DEFAULT 1,
   `JenisTulisan` int(11) NOT NULL,
   PRIMARY KEY (`idTulisan`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `tulisan` (`idTulisan`, `TanggalDibuat`, `Judul`, `Isi`, `Aktif`, `JenisTulisan`) VALUES
 (1, '2024-08-01', 'Alur Penyerahan Hardcopy & Softcopy Skripsi', 'Mahasiswa yang telah selesai ujian sidang wajib menyerahkan dokumen skripsi hardcopy dan softcopy PDF ke bagian pengolahan UPA Perpustakaan.', 1, 1),
 (2, '2024-08-05', 'Panduan Bebas Pustaka Online Mahasiswa', 'Surat keterangan bebas pustaka dapat diproses secara daring setelah verifikasi kelengkapan berkas skripsi disetujui.', 1, 1),
-(3, '2024-08-10', 'Format Unggah Berkas Lembar Pengesahan', 'Lembar pengesahan wajib diunggah dalam format PDF yang telah ditandatangani lengkap oleh dosen pembimbing dan dekan.', 1, 1),
-(4, '2024-08-15', 'Jam Layanan Loket Perpustakaan Semester Ganjil', 'Pelayanan loket sirkulasi dan repositori buka setiap hari kerja Senin sampai Jumat mulai pukul 08.00 hingga 16.00 WIB.', 1, 2),
-(5, '2024-08-20', 'Pemberitahuan Bebas Denda Keterlambatan Koleksi', 'Program pemutihan denda buku pinjaman dibuka hingga akhir bulan untuk mempermudah administrasi yudisium mahasiswa.', 1, 2),
-(6, '2024-08-25', 'Penerbitan Surat Bebas Pustaka Terintegrasi Gmail', 'Kini surat bebas pustaka resmi yang terbit otomatis dikirimkan ke alamat Gmail mahasiswa dalam format PDF.', 1, 2),
-(7, '2024-09-01', 'Tata Tertib Penggunaan Ruang Repositori & Skripsi', 'Pengunjung wajib menjaga ketenangan dan menjaga keutuhan koleksi cetak tugas akhir yang dibaca di ruang baca.', 1, 1),
-(8, '2024-09-05', 'Pencarian Naskah Skripsi Online', 'Koleksi naskah skripsi digital dapat diakses melalui portal pencarian repositori perpustakaan.', 1, 1),
-(9, '2024-09-10', 'Verifikasi Keaslian Surat Bebas Pustaka', 'Setiap surat bebas pustaka memiliki nomor surat dan QR-Code validasi yang dapat diverifikasi keabsahannya.', 1, 1),
-(10, '2024-09-15', 'Informasi Kontak Bantuan Pengolahan Skripsi', 'Jika ada kendala unggah naskah skripsi silakan hubungi loket bantuan perpustakaan kampus Bina Widya.', 1, 2);
+(3, '2024-08-10', 'Standar Format Dokumen Skripsi & Tugas Akhir', 'Format berkas softcopy harus memuat cover, abstrak, bab 1 sampai penutup serta daftar pustaka dalam berkas PDF utuh dan terpisah.', 1, 2),
+(4, '2024-08-15', 'Jam Layanan Verifikasi Skripsi Semester Genap', 'Layanan verifikasi berkas tugas akhir dibuka setiap hari Senin sampai Jumat pukul 08.30 - 15.30 WIB di Ruang Repositori.', 1, 1),
+(5, '2024-08-20', 'Sosialisasi Pengecekan Similaritas Turnitin', 'Perpustakaan memfasilitasi uji similaritas karya ilmiah mahasiswa maksimal 25% sesuai standar regulasi akademik kampus.', 1, 2),
+(6, '2024-08-25', 'Integrasi Data Repository dan Dashboard Digital', 'Sistem pelaporan skripsi kini terkoneksi langsung secara realtime dengan Dashboard Informasi Publik UPA Perpustakaan.', 1, 1),
+(7, '2024-09-01', 'Batas Akhir Penyerahan Dokumen Wisuda Periode Ini', 'Batas akhir unggah mandiri dan pengesahan bebas pustaka untuk periode wisuda adalah akhir bulan berjalan.', 1, 1),
+(8, '2024-09-05', 'Akses Referensi E-Journal & E-Book Kampus', 'Mahasiswa dapat mengakses ribuan jurnal ilmiah nasional dan internasional melalui portal resmi e-resources UPA Perpustakaan.', 1, 2),
+(9, '2024-09-10', 'Layanan Bimbingan Sitasi dan Reference Manager', 'Pustakawan menyediakan sesi konsultasi penggunaan Mendeley dan Zotero untuk penulisan sitasi daftar pustaka karya ilmiah.', 1, 2),
+(10, '2024-09-15', 'Apresiasi Pengumpulan Karya Ilmiah Mahasiswa', 'UPA Perpustakaan mengapresiasi mahasiswa yang mengumpulkan dokumen skripsi secara lengkap dan tepat waktu.', 1, 1);
 
 -- --------------------------------------------------------
 -- Table structure for table `users`
@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `JenisUser` int(11) NOT NULL,
   `UserName` varchar(30) NOT NULL,
   `Password` varchar(30) NOT NULL,
-  `Nama` varchar(50) NOT NULL,
+  `Nama` varchar(30) NOT NULL,
   `JenisKelamin` int(11) NOT NULL,
   `TempatLahir` varchar(30) NOT NULL,
   `TanggalLahir` date NOT NULL,
@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `foto` varchar(500) NOT NULL,
   `Pinjam` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`idUser`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `users` (`idUser`, `JenisUser`, `UserName`, `Password`, `Nama`, `JenisKelamin`, `TempatLahir`, `TanggalLahir`, `Alamat`, `NoKTP`, `foto`, `Pinjam`) VALUES
 (1, 1, 'admin', 'admin123', 'Administrator Perpustakaan', 1, 'Pekanbaru', '1985-05-12', 'Jl. HR Soebrantas Km 12.5 Pekanbaru', '1471010101850001', 'default.png', 0),
@@ -222,8 +222,6 @@ SELECT
   `skripsi`.`id_jenis_dokumen` AS `id_jenis_dokumen`, 
   `skripsi`.`nama` AS `nama`, 
   `skripsi`.`nim` AS `nim`, 
-  `skripsi`.`email` AS `email`,
-  `skripsi`.`email_sent_at` AS `email_sent_at`,
   `skripsi`.`id_fakultas` AS `id_fakultas`, 
   `skripsi`.`id_jurusan` AS `id_jurusan`, 
   `skripsi`.`judul` AS `judul`, 
