@@ -58,7 +58,7 @@ export const LoginModal: React.FC = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Contoh: 2007111002 atau admin"
+              placeholder="Masukkan NIM atau Username..."
               className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-mono font-medium"
               required
             />

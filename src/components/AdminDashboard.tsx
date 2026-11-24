@@ -30,7 +30,6 @@ export const AdminDashboard: React.FC = () => {
     fakultas,
     jurusan,
     jenisDokumen,
-    toggleHardCopy,
     toggleSoftCopy,
     updateSkripsi,
     deleteSkripsi,
@@ -217,7 +216,6 @@ export const AdminDashboard: React.FC = () => {
                   <th className="py-3 px-4 min-w-[150px]">No. Surat / Tanggal</th>
                   <th className="py-3 px-4 min-w-[180px]">Mahasiswa & NIM</th>
                   <th className="py-3 px-4 min-w-[320px]">Judul Karya Ilmiah</th>
-                  <th className="py-3 px-4 min-w-[120px] text-center">Hardcopy (1-Klik)</th>
                   <th className="py-3 px-4 min-w-[120px] text-center">Softcopy (1-Klik)</th>
                   <th className="py-3 px-4 min-w-[120px] text-center">Aksi</th>
                 </tr>
@@ -248,29 +246,6 @@ export const AdminDashboard: React.FC = () => {
                         <p className="text-xs text-slate-900 font-medium leading-relaxed break-words">
                           {item.judul}
                         </p>
-                      </td>
-                      <td className="py-3 px-4 text-center align-top">
-                        <button
-                          onClick={() => toggleHardCopy(item.id_skripsi)}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold transition-all whitespace-nowrap cursor-pointer ${
-                            item.hard_copy === 1
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                              : 'bg-rose-50 text-rose-700 border border-rose-200'
-                          }`}
-                          title="Klik untuk mengubah status penyerahan hardcopy"
-                        >
-                          {item.hard_copy === 1 ? (
-                            <>
-                              <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                              <span>Diserahkan</span>
-                            </>
-                          ) : (
-                            <>
-                              <XCircle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                              <span>Belum</span>
-                            </>
-                          )}
-                        </button>
                       </td>
                       <td className="py-3 px-4 text-center align-top">
                         <button
@@ -1001,16 +976,6 @@ export const AdminDashboard: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-6 py-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    name="hard_copy"
-                    defaultChecked={editingSkripsi ? editingSkripsi.hard_copy === 1 : true}
-                    className="rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                  />
-                  <span className="text-slate-700 font-semibold">Naskah Hardcopy Fisik Diserahkan</span>
-                </label>
-
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"

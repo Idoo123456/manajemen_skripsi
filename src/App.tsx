@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from './context/AppContext';
 import { Navbar } from './components/Navbar';
 import { HeroAndBento } from './components/HeroAndBento';
-import { RepositoryTable } from './components/RepositoryTable';
 import { StudentPortal } from './components/StudentPortal';
 import { TrackingView } from './components/TrackingView';
 import { AdminDashboard } from './components/AdminDashboard';
@@ -11,10 +10,19 @@ import { LoginModal } from './components/LoginModal';
 import { AnnouncementsModal } from './components/AnnouncementsModal';
 import { PrintCertificateModal } from './components/PrintCertificateModal';
 import { Footer } from './components/Footer';
+import { PetugasApp } from './components/petugas/PetugasApp';
+import { PetugasLoginView } from './components/petugas/PetugasLoginView';
 import { ArrowUp } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const { activeTab, setActiveTab, selectedSkripsiForPrint, setSelectedSkripsiForPrint } = useApp();
+  const {
+    portalMode,
+    currentUser,
+    activeTab,
+    setActiveTab,
+    selectedSkripsiForPrint,
+    setSelectedSkripsiForPrint,
+  } = useApp();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
@@ -45,7 +53,7 @@ export const App: React.FC = () => {
     }, 400);
 
     return () => clearTimeout(timer);
-  }, [activeTab]);
+  }, [activeTab, portalMode]);
 
   const handleExploreClick = () => {
     setActiveTab('home');
@@ -59,6 +67,22 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // ==============================================================
+  // 1. PETUGAS PORTAL VIEW (COMPLETELY INDEPENDENT LOOK & FEEL)
+  // ==============================================================
+  if (portalMode === 'petugas') {
+    // If not logged in as Petugas/Admin (JenisUser === 1), show dedicated Petugas Login Screen
+    if (!currentUser || currentUser.JenisUser !== 1) {
+      return <PetugasLoginView />;
+    }
+
+    // If logged in as Petugas/Admin, show dedicated Petugas Workstation
+    return <PetugasApp />;
+  }
+
+  // ==============================================================
+  // 2. STUDENT / PUBLIC PORTAL VIEW
+  // ==============================================================
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-800 flex flex-col selection:bg-blue-500/20 selection:text-blue-700 relative">
       
@@ -82,17 +106,11 @@ export const App: React.FC = () => {
       <main className="flex-1">
         <div key={activeTab} className="animate-page-enter">
           {activeTab === 'home' && (
-            <>
-              <HeroAndBento
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                onExploreClick={handleExploreClick}
-              />
-              <RepositoryTable
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-              />
-            </>
+            <HeroAndBento
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onExploreClick={handleExploreClick}
+            />
           )}
 
           {activeTab === 'guides' && <GuidesView />}

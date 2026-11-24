@@ -7,13 +7,16 @@ import {
   Home,
   BookMarked,
   Search,
-  ArrowRight
+  ArrowRight,
+  Shield
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const {
     activeTab,
     setActiveTab,
+    setPortalMode,
+    isDbConnected,
   } = useApp();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -96,12 +99,35 @@ export const Navbar: React.FC = () => {
 
           {/* Right Action: Clean Direct Action Button */}
           <div className="flex items-center gap-2.5 shrink-0">
+            {/* Database indicator */}
+            <div
+              className={`hidden xl:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition-all ${
+                isDbConnected
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200 shadow-2xs'
+                  : 'bg-slate-100 text-slate-500 border-slate-200'
+              }`}
+              title="Koneksi Basis Data MySQL XAMPP (127.0.0.1:3306 - manajemen_skripsi)"
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${isDbConnected ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`} />
+              <span>{isDbConnected ? 'MySQL XAMPP' : 'Offline'}</span>
+            </div>
+
             <button
               onClick={() => setActiveTab('student')}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl bg-[#004080] hover:bg-[#003366] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
+              className="hidden lg:inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl bg-[#004080] hover:bg-[#003366] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
             >
               <FileCheck2 className="w-3.5 h-3.5 text-sky-300" />
               <span>Unggah Naskah Skripsi</span>
+            </button>
+
+            {/* Dedicated Petugas Switcher Button */}
+            <button
+              onClick={() => setPortalMode('petugas')}
+              className="inline-flex items-center gap-1.5 px-3 py-2 sm:py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm transition-all cursor-pointer border border-slate-800"
+              title="Masuk ke Portal Petugas Repositori"
+            >
+              <Shield className="w-3.5 h-3.5 text-blue-400" />
+              <span>Portal Petugas</span>
             </button>
 
             {/* Mobile / Tablet Hamburger Button */}
@@ -184,7 +210,7 @@ export const Navbar: React.FC = () => {
               <span>Panduan Naskah</span>
             </button>
 
-            <div className="pt-2 border-t border-slate-100">
+            <div className="pt-2 border-t border-slate-100 space-y-2">
               <button
                 onClick={() => {
                   setActiveTab('student');
@@ -194,6 +220,17 @@ export const Navbar: React.FC = () => {
               >
                 <span>Mulai Pengisian Data Skripsi</span>
                 <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                onClick={() => {
+                  setPortalMode('petugas');
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm border border-slate-800"
+              >
+                <Shield className="w-3.5 h-3.5 text-blue-400" />
+                <span>Masuk ke Portal Petugas</span>
               </button>
             </div>
           </div>

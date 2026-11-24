@@ -7,11 +7,12 @@ import {
   BookOpen,
   Building2,
   ShieldCheck,
-  ChevronRight
+  ChevronRight,
+  Shield
 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const { setActiveTab } = useApp();
+  const { setActiveTab, setPortalMode } = useApp();
 
   const handleNavClick = (tab: 'home' | 'student' | 'tracking' | 'guides') => {
     setActiveTab(tab);
@@ -158,6 +159,19 @@ export const Footer: React.FC = () => {
                   <ChevronRight className="w-3 h-3 text-sky-400 group-hover:translate-x-0.5 transition-transform" />
                   <span>E-Journal Universitas Riau</span>
                 </a>
+              </li>
+              <li className="pt-2 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPortalMode('petugas');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="flex items-center gap-2 text-amber-300 hover:text-amber-200 font-bold transition-colors cursor-pointer group text-left"
+                >
+                  <Shield className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                  <span>Portal Khusus Petugas Repositori</span>
+                </button>
               </li>
             </ul>
           </div>

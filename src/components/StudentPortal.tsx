@@ -12,7 +12,7 @@ import {
   CheckCircle2,
   Mail,
   BookOpen,
-  FileUp,
+  FileArchive,
   ShieldCheck,
   Calendar
 } from 'lucide-react';
@@ -46,9 +46,11 @@ export const StudentPortal: React.FC = () => {
   const [selectedJenisDokumenId, setSelectedJenisDokumenId] = useState<number>(1);
   const [tanggal, setTanggal] = useState<string>(new Date().toISOString().split('T')[0]);
   
-  // File Upload states
-  const [uploadedFileName, setUploadedFileName] = useState<string>('');
-  const [uploadedFileSize, setUploadedFileSize] = useState<string>('');
+  // File Upload states: ZIP Word & ZIP PDF
+  const [uploadedWordFileName, setUploadedWordFileName] = useState<string>('');
+  const [uploadedWordFileSize, setUploadedWordFileSize] = useState<string>('');
+  const [uploadedPdfFileName, setUploadedPdfFileName] = useState<string>('');
+  const [uploadedPdfFileSize, setUploadedPdfFileSize] = useState<string>('');
   const [hardCopyChecked, setHardCopyChecked] = useState<boolean>(true);
   const [softCopyChecked, setSoftCopyChecked] = useState<boolean>(true);
   const [agreePlagiarism, setAgreePlagiarism] = useState<boolean>(false);
@@ -76,7 +78,8 @@ export const StudentPortal: React.FC = () => {
       setTanggal(existing.tanggal || new Date().toISOString().split('T')[0]);
       setHardCopyChecked(existing.hard_copy === 1);
       setSoftCopyChecked(existing.soft_copy === 1);
-      setUploadedFileName(`Skripsi_${targetNim}_${existing.nama.replace(/\s+/g, '_')}.pdf`);
+      setUploadedWordFileName(`Skripsi_Word_${targetNim}_${existing.nama.replace(/\s+/g, '_')}.zip`);
+      setUploadedPdfFileName(`Skripsi_PDF_${targetNim}_${existing.nama.replace(/\s+/g, '_')}.zip`);
       setLastSubmittedId(existing.id_skripsi);
       return;
     }
@@ -85,7 +88,6 @@ export const StudentPortal: React.FC = () => {
     if (usr) {
       setNama(usr.Nama);
       setEmail(`${usr.UserName}@student.unri.ac.id`);
-      setUploadedFileName(`Skripsi_${targetNim}_${usr.Nama.replace(/\s+/g, '_')}.pdf`);
       setLastSubmittedId(null);
     }
   };
@@ -110,7 +112,7 @@ export const StudentPortal: React.FC = () => {
         id_jenis_dokumen: selectedJenisDokumenId,
         no_surat: `0${skripsi.length + 1}/SKR/FT/2026`,
         nama: nama.trim() || 'Nama Mahasiswa',
-        nim: nim.trim() || '2007111002',
+        nim: nim.trim() || '',
         email: email.trim() || `${nim}@student.unri.ac.id`,
         email_sent_at: null,
         id_fakultas: selectedFakultasId,
@@ -202,12 +204,21 @@ export const StudentPortal: React.FC = () => {
     }, 6000);
   };
 
-  // File change handler
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // File change handlers: ZIP Word & ZIP PDF
+  const handleWordZipUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setUploadedFileName(file.name);
-      setUploadedFileSize(`${(file.size / (1024 * 1024)).toFixed(1)} MB`);
+      setUploadedWordFileName(file.name);
+      setUploadedWordFileSize(`${(file.size / (1024 * 1024)).toFixed(1)} MB`);
+      setSoftCopyChecked(true);
+    }
+  };
+
+  const handlePdfZipUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setUploadedPdfFileName(file.name);
+      setUploadedPdfFileSize(`${(file.size / (1024 * 1024)).toFixed(1)} MB`);
       setSoftCopyChecked(true);
     }
   };
@@ -228,7 +239,7 @@ export const StudentPortal: React.FC = () => {
                 Penyerahan Mandiri Naskah Skripsi & Tugas Akhir
               </h1>
               <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
-                Formulir resmi UPA Perpustakaan Universitas Riau untuk pengumpulan, verifikasi naskah hardcopy & softcopy digital, serta penerbitan tanda terima penyerahan skripsi bagi mahasiswa tingkat akhir.
+                Formulir resmi UPA Perpustakaan Universitas Riau untuk pengumpulan, verifikasi naskah softcopy digital (.ZIP Word & .ZIP PDF), serta penerbitan tanda terima penyerahan skripsi bagi mahasiswa tingkat akhir.
               </p>
             </div>
 
@@ -343,7 +354,7 @@ export const StudentPortal: React.FC = () => {
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center justify-between">
                   <span>Nomor Induk Mahasiswa (NIM) *</span>
-                  <span className="text-[11px] text-blue-600 font-medium">Contoh: 2007111002</span>
+                  <span className="text-[11px] text-slate-400 font-normal">Ketik NIM resmi mahasiswa</span>
                 </label>
                 <input
                   type="text"
@@ -543,60 +554,98 @@ export const StudentPortal: React.FC = () => {
           <div className="space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <div className="flex items-center gap-2 text-xs font-extrabold text-[#003366] uppercase tracking-wider">
-                <FileUp className="w-4 h-4 text-blue-600" />
-                <span>4. Berkas Softcopy & Konfirmasi Hardcopy</span>
+                <FileArchive className="w-4 h-4 text-blue-600" />
+                <span>4. Berkas Softcopy (.ZIP Word & .ZIP PDF)</span>
               </div>
             </div>
 
-            {/* Upload Softcopy Box */}
-            <div className="p-6 rounded-2xl border-2 border-dashed border-slate-200 hover:border-blue-400 bg-slate-50/50 transition-colors text-center">
-              <input
-                type="file"
-                id="file-pdf-upload"
-                accept=".pdf"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              <label
-                htmlFor="file-pdf-upload"
-                className="cursor-pointer flex flex-col items-center justify-center space-y-2"
-              >
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200 shadow-2xs">
-                  <FileUp className="w-6 h-6" />
-                </div>
+            {/* Upload Softcopy Boxes (Dual ZIP: Word & PDF) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Box 1: ZIP Word */}
+              <div className="p-5 rounded-2xl border-2 border-dashed border-slate-200 hover:border-blue-400 bg-slate-50/50 hover:bg-blue-50/30 transition-all text-center flex flex-col justify-between">
                 <div>
-                  <span className="text-xs font-bold text-blue-700 hover:underline">
-                    Pilih Berkas Naskah PDF (Softcopy)
-                  </span>
-                  <p className="text-[11px] text-slate-500 mt-0.5">
-                    Format file: PDF (Maks. 50 MB) • Memuat naskah utuh & lembar pengesahan bertanda tangan
-                  </p>
+                  <input
+                    type="file"
+                    id="file-word-zip-upload"
+                    accept=".zip,.rar,.7z"
+                    onChange={handleWordZipUpload}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="file-word-zip-upload"
+                    className="cursor-pointer flex flex-col items-center justify-center space-y-2.5"
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200 shadow-2xs group-hover:scale-105 transition-transform">
+                      <FileArchive className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-blue-700 hover:underline block">
+                        Pilih Berkas ZIP Word (.zip)
+                      </span>
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
+                        Format: ZIP/RAR (Maks. 50 MB) • Berisi file Word (.docx) naskah lengkap per bab
+                      </p>
+                    </div>
+                  </label>
                 </div>
-              </label>
 
-              {uploadedFileName && (
-                <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{uploadedFileName}</span>
-                  {uploadedFileSize && <span className="text-[11px] text-emerald-600">({uploadedFileSize})</span>}
+                {uploadedWordFileName ? (
+                  <div className="mt-3 inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 break-all">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span className="truncate max-w-[200px]">{uploadedWordFileName}</span>
+                    {uploadedWordFileSize && <span className="text-[11px] text-emerald-600 shrink-0">({uploadedWordFileSize})</span>}
+                  </div>
+                ) : (
+                  <div className="mt-3 text-[11px] text-slate-400 italic">
+                    Belum ada berkas ZIP Word dipilih
+                  </div>
+                )}
+              </div>
+
+              {/* Box 2: ZIP PDF */}
+              <div className="p-5 rounded-2xl border-2 border-dashed border-slate-200 hover:border-red-400 bg-slate-50/50 hover:bg-red-50/30 transition-all text-center flex flex-col justify-between">
+                <div>
+                  <input
+                    type="file"
+                    id="file-pdf-zip-upload"
+                    accept=".zip,.rar,.7z"
+                    onChange={handlePdfZipUpload}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="file-pdf-zip-upload"
+                    className="cursor-pointer flex flex-col items-center justify-center space-y-2.5"
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center border border-red-200 shadow-2xs group-hover:scale-105 transition-transform">
+                      <FileArchive className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold text-red-700 hover:underline block">
+                        Pilih Berkas ZIP PDF (.zip)
+                      </span>
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
+                        Format: ZIP/RAR (Maks. 50 MB) • Berisi file PDF naskah lengkap & lembar pengesahan
+                      </p>
+                    </div>
+                  </label>
                 </div>
-              )}
+
+                {uploadedPdfFileName ? (
+                  <div className="mt-3 inline-flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 break-all">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span className="truncate max-w-[200px]">{uploadedPdfFileName}</span>
+                    {uploadedPdfFileSize && <span className="text-[11px] text-emerald-600 shrink-0">({uploadedPdfFileSize})</span>}
+                  </div>
+                ) : (
+                  <div className="mt-3 text-[11px] text-slate-400 italic">
+                    Belum ada berkas ZIP PDF dipilih
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Checklist Persyaratan */}
             <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-              <label className="flex items-start gap-3 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={hardCopyChecked}
-                  onChange={(e) => setHardCopyChecked(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
-                />
-                <span className="text-xs text-slate-700 leading-relaxed">
-                  <strong>Konfirmasi Penyerahan Hardcopy (Fisik):</strong> Saya telah / bersedia menyerahkan naskah jilid tugas akhir lengkap dengan cover standar fakultas ke loket UPA Perpustakaan.
-                </span>
-              </label>
-
               <label className="flex items-start gap-3 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -605,7 +654,7 @@ export const StudentPortal: React.FC = () => {
                   className="mt-0.5 w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
                 />
                 <span className="text-xs text-slate-700 leading-relaxed">
-                  <strong>Validasi Berkas Softcopy Digital:</strong> File PDF naskah tugas akhir telah sesuai ketentuan pemisahan berkas (Cover, Abstrak, BAB I-V, Daftar Pustaka).
+                  <strong>Validasi Berkas Softcopy Digital:</strong> Berkas ZIP Word (.zip) dan ZIP PDF (.zip) naskah tugas akhir telah sesuai ketentuan repositori (Cover, Abstrak, BAB I-V, Daftar Pustaka).
                 </span>
               </label>
 

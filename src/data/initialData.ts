@@ -52,60 +52,14 @@ export const INITIAL_PELAPOR: Pelapor[] = [
   { id_pelapor: 10, nama_pelapor: 'Fitri Ramadhani, S.Sos.', nip_pelapor: '199302142020122006', jabatan_pelapor: 'Sekretariat Repositori', ttd_url: 'ttd_fitri.png', ttd_file_name: 'ttd_fitri.png', active: 1 },
 ];
 
-export const INITIAL_SKRIPSI: Skripsi[] = [
-  {
-    id_skripsi: 1,
-    id_jenis_dokumen: 1,
-    no_surat: '001/SKR/FT/2026',
-    nama: 'Muhammad Rizki Pratama',
-    nim: '2007111001',
-    email: 'm.rizki.pratama@student.unri.ac.id',
-    email_sent_at: '2026-02-10 10:15',
-    id_fakultas: 1,
-    id_jurusan: 1,
-    judul: 'Rancang Bangun Sistem Informasi Repositori Skripsi Berbasis Web Menggunakan React dan Node.js',
-    hard_copy: 1,
-    soft_copy: 1,
-    tanggal: '2026-02-10'
-  },
-  {
-    id_skripsi: 2,
-    id_jenis_dokumen: 1,
-    no_surat: '002/SKR/FMIPA/2026',
-    nama: 'Siti Nurhaliza',
-    nim: '2007111002',
-    email: 'siti.nurhaliza@student.unri.ac.id',
-    email_sent_at: '2026-02-12 14:30',
-    id_fakultas: 2,
-    id_jurusan: 4,
-    judul: 'Penerapan Algoritma K-Means Clustering dalam Pemetaan Minat Riset Tugas Akhir Mahasiswa',
-    hard_copy: 1,
-    soft_copy: 1,
-    tanggal: '2026-02-12'
-  },
-  {
-    id_skripsi: 3,
-    id_jenis_dokumen: 1,
-    no_surat: '003/SKR/FT/2026',
-    nama: 'Ahmad Fadillah',
-    nim: '2007122003',
-    email: 'ahmad.fadillah@student.unri.ac.id',
-    email_sent_at: null,
-    id_fakultas: 1,
-    id_jurusan: 2,
-    judul: 'Implementasi Internet of Things (IoT) untuk Monitoring Kualitas Daya Listrik Berbasis Mikrokontroler',
-    hard_copy: 1,
-    soft_copy: 0,
-    tanggal: '2026-02-15'
-  }
-];
+export const INITIAL_SKRIPSI: Skripsi[] = [];
 
 export const INITIAL_TULISAN: Tulisan[] = [
   {
     idTulisan: 1,
     TanggalDibuat: '2024-08-01',
-    Judul: 'Alur Penyerahan Hardcopy & Softcopy Skripsi',
-    Isi: 'Mahasiswa yang telah selesai ujian sidang dan revisi wajib menyerahkan dokumen skripsi hardcopy jilid resmi dan softcopy PDF naskah lengkap ke bagian pengolahan UPA Perpustakaan Universitas Riau. Pastikan lembar pengesahan telah ditandatangani lengkap oleh dewan pembimbing dan penguji.',
+    Judul: 'Alur Pengunggahan & Validasi Naskah Digital Skripsi',
+    Isi: 'Mahasiswa yang telah selesai ujian sidang dan revisi wajib mengunggah dokumen digital skripsi naskah lengkap (ZIP Word & ZIP PDF) ke sistem repositori UPA Perpustakaan Universitas Riau. Pastikan lembar pengesahan telah ditandatangani lengkap oleh dewan pembimbing dan penguji.',
     Aktif: 1,
     JenisTulisan: 1
   },
@@ -190,12 +144,58 @@ export const INITIAL_USERS: User[] = [
     UserName: 'admin',
     Password: 'admin123',
     Nama: 'Administrator Perpustakaan',
+    email: 'admin.library@unri.ac.id',
     JenisKelamin: 1,
     TempatLahir: 'Pekanbaru',
     TanggalLahir: '1985-05-12',
     Alamat: 'Jl. HR Soebrantas Km 12.5 Pekanbaru',
     NoKTP: '1471010101850001',
     foto: 'default.png',
+    Pinjam: 0
+  },
+  {
+    idUser: 11,
+    JenisUser: 1,
+    UserName: '197803152003121002',
+    Password: 'petugas123',
+    Nama: 'Hendra Wijaya, S.Sos., M.IP.',
+    email: 'hendra.wijaya@unri.ac.id',
+    JenisKelamin: 1,
+    TempatLahir: 'Pekanbaru',
+    TanggalLahir: '1978-03-15',
+    Alamat: 'Komplek Dosen UNRI Gobah Pekanbaru',
+    NoKTP: '1471011503780001',
+    foto: 'ttd_hendra.png',
+    Pinjam: 0
+  },
+  {
+    idUser: 12,
+    JenisUser: 1,
+    UserName: '198406202008012005',
+    Password: 'petugas123',
+    Nama: 'Nurul Hidayati, S.I.Pust.',
+    email: 'nurul.hidayati@unri.ac.id',
+    JenisKelamin: 2,
+    TempatLahir: 'Kampar',
+    TanggalLahir: '1984-06-20',
+    Alamat: 'Jl. Melati Panam No. 24 Pekanbaru',
+    NoKTP: '1401026006840002',
+    foto: 'ttd_nurul.png',
+    Pinjam: 0
+  },
+  {
+    idUser: 13,
+    JenisUser: 1,
+    UserName: '198711222010012003',
+    Password: 'petugas123',
+    Nama: 'Rina Marlina, A.Md.Pust.',
+    email: 'rina.marlina@unri.ac.id',
+    JenisKelamin: 2,
+    TempatLahir: 'Dumai',
+    TanggalLahir: '1987-11-22',
+    Alamat: 'Jl. Garuda Sakti Km 1 Pekanbaru',
+    NoKTP: '1472016211870003',
+    foto: 'ttd_rina.png',
     Pinjam: 0
   },
   {

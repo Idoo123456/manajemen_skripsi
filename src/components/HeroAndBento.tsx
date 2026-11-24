@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useApp } from '../context/AppContext';
 import {
   Search,
@@ -15,6 +15,7 @@ import {
   BookMarked
 } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
+import { RepositoryTable } from './RepositoryTable';
 
 interface HeroAndBentoProps {
   searchQuery: string;
@@ -36,11 +37,25 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
     setActiveTab
   } = useApp();
 
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [filterJenisTulisan, setFilterJenisTulisan] = useState<number | 'all'>('all');
+
+  const handleSearchBtnClick = () => {
+    if (!searchQuery.trim()) {
+      searchInputRef.current?.focus();
+    } else {
+      const el = document.getElementById('search-results-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        onExploreClick();
+      }
+    }
+  };
 
   // Computed stats
   const totalSkripsi = skripsi.length;
-  const verifiedCount = skripsi.filter(s => s.hard_copy === 1 && s.soft_copy === 1).length;
+  const verifiedCount = skripsi.filter(s => s.soft_copy === 1).length;
   const totalFakultas = fakultas.length;
   const totalJenisDokumen = jenisDokumen.length;
 
@@ -84,22 +99,23 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                 <div className="flex items-center bg-white border-2 border-slate-300 focus-within:border-blue-600 rounded-2xl p-2 shadow-sm transition-all">
                   <Search className="w-5 h-5 text-slate-400 ml-3 mr-2 shrink-0" />
                   <input
+                    ref={searchInputRef}
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Cari naskah berdasarkan NIM, Nama Mahasiswa, atau Judul Skripsi..."
+                    placeholder="Ketik nama mahasiswa atau NIM untuk mencari skripsi..."
                     className="w-full bg-transparent text-sm text-slate-800 placeholder-slate-400 focus:outline-none px-2 py-2"
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="text-xs text-slate-400 hover:text-slate-600 px-2 cursor-pointer"
+                      className="text-xs text-slate-400 hover:text-slate-600 px-2 cursor-pointer font-semibold"
                     >
                       Hapus
                     </button>
                   )}
                   <button
-                    onClick={onExploreClick}
+                    onClick={handleSearchBtnClick}
                     className="shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#004080] hover:bg-[#003366] text-white text-xs font-bold shadow-sm transition-all cursor-pointer"
                   >
                     <span>Cari Skripsi</span>
@@ -107,17 +123,17 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                   </button>
                 </div>
               </div>
-              <div className="mt-2.5 flex items-center justify-center gap-2 text-xs text-slate-500">
+              <div className="mt-2.5 flex items-center justify-center gap-2 text-xs text-slate-500 flex-wrap">
                 {skripsi.length > 0 ? (
                   <>
-                    <span>Pencarian cepat:</span>
+                    <span>Contoh pencarian:</span>
                     {skripsi.slice(0, 3).map((s) => (
                       <button
                         key={s.id_skripsi}
-                        onClick={() => setSearchQuery(s.nim)}
+                        onClick={() => setSearchQuery(s.nama)}
                         className="text-blue-700 hover:underline underline-offset-2 font-medium"
                       >
-                        {s.nim}
+                        {s.nama}
                       </button>
                     ))}
                   </>
@@ -159,6 +175,16 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
             </div>
           </div>
         </ScrollReveal>
+
+        {/* HASIL PENCARIAN NASKAH MAHASISWA: HANYA MUNCUL DI PALING ATAS SAAT DICARI */}
+        {searchQuery.trim() !== '' && (
+          <div id="search-results-section" className="mt-8 mb-6 animate-in fade-in slide-in-from-top-4 duration-300">
+            <RepositoryTable
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
+          </div>
+        )}
 
         {/* 4 Bento Grid Stat Cards with Staggered Scroll Reveal */}
         <div id="bento-stats-section" className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -243,7 +269,7 @@ export const HeroAndBento: React.FC<HeroAndBentoProps> = ({
                 </span>
               </div>
               <p className="mt-2 text-xs text-slate-500">
-                Hardcopy & Softcopy lengkap disetujui pustakawan repositori.
+                Softcopy naskah lengkap digital disetujui pustakawan repositori.
               </p>
             </div>
           </ScrollReveal>

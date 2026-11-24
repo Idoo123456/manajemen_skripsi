@@ -43,8 +43,8 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
 
   const [isSendingEmail, setIsSendingEmail] = useState<boolean>(false);
 
-  // Status kelayakan cetak: Hardcopy dan Softcopy sudah diserahkan & diverifikasi
-  const isEligible = skripsiItem.hard_copy === 1 && skripsiItem.soft_copy === 1;
+  // Status kelayakan cetak: Softcopy sudah diserahkan & diverifikasi
+  const isEligible = skripsiItem.soft_copy === 1;
 
   // Format date in Indonesian: e.g. "20 Juni 2026"
   const formatIndonesianDate = (dateStr: string) => {
@@ -133,7 +133,7 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
             <div className="space-y-0.5">
               <span className="font-bold">Perhatian: Berkas Skripsi Belum Lengkap Terverifikasi!</span>
               <p className="text-[11px] text-amber-700">
-                Hardcopy: {skripsiItem.hard_copy === 1 ? 'Sudah diserahkan' : 'Belum diserahkan'} • Softcopy PDF: {skripsiItem.soft_copy === 1 ? 'Sudah divalidasi' : 'Belum divalidasi'}. Hubungi petugas loket repositori.
+                Softcopy (ZIP Word & ZIP PDF): {skripsiItem.soft_copy === 1 ? 'Sudah divalidasi' : 'Belum divalidasi'}. Hubungi petugas loket repositori.
               </p>
             </div>
           </div>
@@ -281,15 +281,7 @@ export const PrintCertificateModal: React.FC<PrintCertificateModalProps> = ({
                     ✓
                   </span>
                   <span>
-                    <strong>Penyerahan Naskah Hardcopy:</strong> Buku jilid tugas akhir lengkap telah diserahkan dan diarsipkan di loket fisik UPA Perpustakaan.
-                  </span>
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="w-4 h-4 rounded border border-black flex items-center justify-center font-bold text-[10px] shrink-0">
-                    ✓
-                  </span>
-                  <span>
-                    <strong>Pengunggahan Naskah Softcopy Digital:</strong> Naskah format PDF lengkap (Halaman Judul, Pengesahan, Abstrak, BAB I-V, dan Lampiran) telah divalidasi ke E-Repository institusi.
+                    <strong>Pengunggahan Naskah Softcopy Digital:</strong> Naskah berkas digital ZIP Word (.zip) dan ZIP PDF (.zip) lengkap (Halaman Judul, Pengesahan, Abstrak, BAB I-V, dan Lampiran) telah divalidasi ke E-Repository institusi.
                   </span>
                 </div>
                 <div className="flex items-center gap-2.5">

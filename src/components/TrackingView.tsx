@@ -53,9 +53,8 @@ export const TrackingView: React.FC = () => {
   const docObj = foundSkripsi ? jenisDokumen.find(d => d.id_jenis_dokumen === foundSkripsi.id_jenis_dokumen) : null;
 
   // Verification calculations
-  const isHardCopyValid = foundSkripsi ? foundSkripsi.hard_copy === 1 : false;
   const isSoftCopyValid = foundSkripsi ? foundSkripsi.soft_copy === 1 : false;
-  const isFullyApproved = Boolean(foundSkripsi && isHardCopyValid && isSoftCopyValid);
+  const isFullyApproved = Boolean(foundSkripsi && isSoftCopyValid);
 
   // Handle Search Submission
   const handleSearch = (e: React.FormEvent) => {
@@ -98,7 +97,7 @@ export const TrackingView: React.FC = () => {
             Pelacakan Status Penyerahan Naskah Skripsi
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 mt-2">
-            Pantau tahapan validasi naskah fisik (hardcopy) dan berkas digital (softcopy PDF) tugas akhir Anda di UPA Perpustakaan Universitas Riau secara realtime.
+            Pantau tahapan validasi naskah digital (softcopy ZIP Word & ZIP PDF) tugas akhir Anda di UPA Perpustakaan Universitas Riau secara realtime.
           </p>
         </div>
       </ScrollReveal>
@@ -121,46 +120,6 @@ export const TrackingView: React.FC = () => {
             Lacak
           </button>
         </form>
-
-        {/* Quick Sample NIMs */}
-        <div className="mt-3 flex items-center justify-center gap-2 text-xs text-slate-500">
-          <span>Contoh NIM terdaftar:</span>
-          <button
-            type="button"
-            onClick={() => {
-              setInputNim('2007111001');
-              setActiveNim('2007111001');
-              setTrackingNim('2007111001');
-            }}
-            className="text-blue-600 hover:underline font-mono font-semibold"
-          >
-            2007111001
-          </button>
-          <span>•</span>
-          <button
-            type="button"
-            onClick={() => {
-              setInputNim('2007111002');
-              setActiveNim('2007111002');
-              setTrackingNim('2007111002');
-            }}
-            className="text-blue-600 hover:underline font-mono font-semibold"
-          >
-            2007111002
-          </button>
-          <span>•</span>
-          <button
-            type="button"
-            onClick={() => {
-              setInputNim('2007122003');
-              setActiveNim('2007122003');
-              setTrackingNim('2007122003');
-            }}
-            className="text-blue-600 hover:underline font-mono font-semibold"
-          >
-            2007122003
-          </button>
-        </div>
       </div>
 
       {/* Content Area */}
@@ -258,7 +217,7 @@ export const TrackingView: React.FC = () => {
               <span>Tahapan Verifikasi Naskah Skripsi</span>
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               
               {/* Step 1: Pendaftaran Data */}
               <div className="p-4 rounded-2xl border border-emerald-200 bg-emerald-50/50 flex items-start gap-3">
@@ -273,7 +232,7 @@ export const TrackingView: React.FC = () => {
                 </div>
               </div>
 
-              {/* Step 2: Softcopy PDF */}
+              {/* Step 2: Softcopy PDF & Word */}
               <div className={`p-4 rounded-2xl border flex items-start gap-3 ${
                 isSoftCopyValid ? 'border-emerald-200 bg-emerald-50/50' : 'border-amber-200 bg-amber-50/50'
               }`}>
@@ -283,49 +242,30 @@ export const TrackingView: React.FC = () => {
                   {isSoftCopyValid ? '✓' : '...'}
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs font-bold text-slate-800">2. Validasi Naskah Softcopy (PDF)</h4>
+                  <h4 className="text-xs font-bold text-slate-800">2. Validasi Naskah Softcopy (ZIP Word & PDF)</h4>
                   <p className="text-[11px] text-slate-600 leading-relaxed">
                     {isSoftCopyValid
-                      ? 'Naskah PDF lengkap (Cover, Pengesahan, Abstrak, BAB I-V) telah divalidasi pustakawan.'
-                      : 'Berkas naskah PDF digital sedang dalam antrean pemeriksaan oleh pustakawan verifikator.'}
+                      ? 'Berkas digital ZIP Word dan ZIP PDF naskah lengkap telah diverifikasi dan disetujui pustakawan.'
+                      : 'Berkas naskah digital ZIP sedang dalam antrean pemeriksaan oleh pustakawan verifikator.'}
                   </p>
                 </div>
               </div>
 
-              {/* Step 3: Hardcopy Jilid */}
-              <div className={`p-4 rounded-2xl border flex items-start gap-3 ${
-                isHardCopyValid ? 'border-emerald-200 bg-emerald-50/50' : 'border-amber-200 bg-amber-50/50'
-              }`}>
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs ${
-                  isHardCopyValid ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                }`}>
-                  {isHardCopyValid ? '✓' : '...'}
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-xs font-bold text-slate-800">3. Penyerahan Naskah Hardcopy (Fisik)</h4>
-                  <p className="text-[11px] text-slate-600 leading-relaxed">
-                    {isHardCopyValid
-                      ? 'Buku fisik skripsi jilid resmi telah diserahkan dan diarsipkan di loket UPA Perpustakaan.'
-                      : 'Menunggu penyerahan buku jilid skripsi fisik ke loket layanan repositori perpustakaan.'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 4: Tanda Terima Terbit */}
+              {/* Step 3: Tanda Terima Terbit */}
               <div className={`p-4 rounded-2xl border flex items-start gap-3 ${
                 isFullyApproved ? 'border-emerald-200 bg-emerald-50/50' : 'border-slate-200 bg-slate-50'
               }`}>
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs ${
                   isFullyApproved ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-500'
                 }`}>
-                  {isFullyApproved ? '✓' : '4'}
+                  {isFullyApproved ? '✓' : '3'}
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs font-bold text-slate-800">4. Tanda Terima Sah Repositori</h4>
+                  <h4 className="text-xs font-bold text-slate-800">3. Tanda Terima Sah Repositori</h4>
                   <p className="text-[11px] text-slate-600 leading-relaxed">
                     {isFullyApproved
                       ? 'Surat Tanda Terima resmi ber-QR Code sah dan dapat dicetak sebagai syarat pendaftaran yudisium.'
-                      : 'Surat tanda terima akan aktif setelah berkas fisik dan digital diverifikasi lengkap.'}
+                      : 'Surat tanda terima akan aktif setelah berkas digital diverifikasi lengkap.'}
                   </p>
                 </div>
               </div>

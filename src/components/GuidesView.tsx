@@ -27,7 +27,7 @@ export const GuidesView: React.FC = () => {
           </h2>
           <p className="mt-3 text-sm text-slate-600 leading-relaxed">
             Petunjuk teknis resmi bagi mahasiswa jenjang Diploma, Sarjana, Magister, dan Doktoral Universitas Riau
-            dalam penyerahan naskah hardcopy fisik dan softcopy digital ke UPA Perpustakaan.
+            dalam penyerahan dan validasi naskah digital softcopy (.ZIP Word & .ZIP PDF) ke UPA Perpustakaan.
           </p>
         </div>
       </ScrollReveal>
@@ -60,9 +60,9 @@ export const GuidesView: React.FC = () => {
         <ScrollReveal delay={250} direction="up">
           <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-md shadow-slate-200/50 hover:border-indigo-400 hover:shadow-xl transition-all h-full">
             <div className="text-3xl font-black text-indigo-200 mb-2 font-mono">03</div>
-            <h3 className="text-base font-bold text-slate-900 mb-2">Penyerahan Hardcopy</h3>
+            <h3 className="text-base font-bold text-slate-900 mb-2">Unggah Berkas ZIP (Word & PDF)</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Menyerahkan buku fisik naskah skripsi jilid resmi dengan warna sampul sesuai fakultas masing-masing ke loket UPA Perpustakaan.
+              Mengunggah berkas arsip ZIP Word (.docx per bab) dan ZIP PDF naskah lengkap melalui portal penyerahan mandiri mahasiswa.
             </p>
           </div>
         </ScrollReveal>
