@@ -39,7 +39,6 @@ export const PetugasApp: React.FC = () => {
     setCurrentUser,
     logout,
     setPortalMode,
-    isDbConnected,
     skripsi,
     users,
     pelapor,
@@ -69,6 +68,8 @@ export const PetugasApp: React.FC = () => {
   const [searchFilter, setSearchFilter] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'verified' | 'no_surat'>('all');
   const [facultyFilter, setFacultyFilter] = useState<string>('all');
+  const [certSearch, setCertSearch] = useState<string>('');
+  const [certFilter, setCertFilter] = useState<'all' | 'ready' | 'has_surat' | 'no_surat'>('all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Modals state
@@ -148,6 +149,26 @@ export const PetugasApp: React.FC = () => {
       return matchSearch && matchFaculty && matchStatus;
     });
   }, [skripsi, searchFilter, facultyFilter, statusFilter]);
+
+  // Filtered Certificates list for Penerbitan Tanda Terima
+  const filteredCertificates = useMemo(() => {
+    return skripsi.filter(item => {
+      const q = certSearch.toLowerCase().trim();
+      const matchSearch =
+        !q ||
+        item.nama.toLowerCase().includes(q) ||
+        item.nim.toLowerCase().includes(q) ||
+        item.judul.toLowerCase().includes(q) ||
+        (item.no_surat && item.no_surat.toLowerCase().includes(q));
+
+      if (!matchSearch) return false;
+
+      if (certFilter === 'ready') return item.soft_copy === 1;
+      if (certFilter === 'has_surat') return !!item.no_surat;
+      if (certFilter === 'no_surat') return !item.no_surat;
+      return true;
+    });
+  }, [skripsi, certSearch, certFilter]);
 
   // Auto-generate surat number helper
   const handleGenerateSurat = (item: Skripsi) => {
@@ -283,7 +304,13 @@ export const PetugasApp: React.FC = () => {
               <span>Verifikasi Naskah</span>
             </div>
             {stats.pendingSoft > 0 && (
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-100 text-amber-800 border border-amber-200">
+              <span
+                className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                  activeTab === 'skripsi'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-amber-100 text-amber-800 border border-amber-200'
+                }`}
+              >
                 {stats.pendingSoft}
               </span>
             )}
@@ -302,9 +329,17 @@ export const PetugasApp: React.FC = () => {
               <Award className="w-4 h-4" />
               <span>Penerbitan Tanda Terima</span>
             </div>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-100 text-slate-700 font-bold">
-              {stats.hasSurat}
-            </span>
+            {stats.pendingSurat > 0 && (
+              <span
+                className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
+                  activeTab === 'certificate'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-blue-100 text-blue-800 border border-blue-200'
+                }`}
+              >
+                {stats.pendingSurat}
+              </span>
+            )}
           </button>
 
           <div className="px-3 pt-4 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
@@ -324,7 +359,6 @@ export const PetugasApp: React.FC = () => {
               <Users className="w-4 h-4" />
               <span>Pejabat Penandatangan</span>
             </div>
-            <span className="text-[10px] font-mono text-slate-500 font-bold">{pelapor.length}</span>
           </button>
 
           {/* 5. Warta & Panduan */}
@@ -340,7 +374,6 @@ export const PetugasApp: React.FC = () => {
               <BookOpen className="w-4 h-4" />
               <span>Warta & Panduan</span>
             </div>
-            <span className="text-[10px] font-mono text-slate-500 font-bold">{tulisan.length}</span>
           </button>
 
           {/* 6. Pengguna & Mahasiswa */}
@@ -356,7 +389,6 @@ export const PetugasApp: React.FC = () => {
               <GraduationCap className="w-4 h-4" />
               <span>Data Akun Pengguna</span>
             </div>
-            <span className="text-[10px] font-mono text-slate-500 font-bold">{users.length}</span>
           </button>
 
           {/* 7. Master Data */}
@@ -422,19 +454,6 @@ export const PetugasApp: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Live MySQL Database Status Badge */}
-            <div
-              className={`hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl text-[11px] font-bold border transition-all ${
-                isDbConnected
-                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200 shadow-2xs'
-                  : 'bg-amber-50 text-amber-800 border-amber-200'
-              }`}
-              title="Koneksi Basis Data MySQL XAMPP"
-            >
-              <span className={`w-2 h-2 rounded-full ${isDbConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-              <span>{isDbConnected ? 'MySQL XAMPP (127.0.0.1:3306 • manajemen_skripsi)' : 'Database Offline'}</span>
-            </div>
-
             {/* Action Button: Tambah Skripsi */}
             <button
               onClick={() => setIsAddSkripsiOpen(true)}
@@ -1005,98 +1024,183 @@ export const PetugasApp: React.FC = () => {
           {/* TAB 3: PENERBITAN TANDA TERIMA & BEBAS PUSTAKA */}
           {/* ============================================================== */}
           {activeTab === 'certificate' && (
-            <div className="space-y-6">
-              <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                      <Award className="w-5 h-5 text-indigo-600" />
-                      <span>Pusat Cetak & Penerbitan Surat Bebas Pustaka</span>
-                    </h3>
-                    <p className="text-xs text-slate-600 mt-1">
-                      Pilih berkas skripsi yang telah diverifikasi lengkap untuk mencetak Surat Tanda Terima resmi dengan tanda tangan digital & QR Code.
+            <div className="space-y-4">
+              {/* Header Banner */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                    <Award className="w-5 h-5 text-indigo-600" />
+                    <span>Pusat Cetak & Penerbitan Surat Bebas Pustaka</span>
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-1">
+                    Daftar naskah skripsi untuk penerbitan dan pencetakan Surat Tanda Terima resmi dengan tanda tangan digital & QR Code.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-600">
+                    Total: <strong className="text-slate-900 font-bold">{skripsi.length}</strong>
+                  </span>
+                  <span className="px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-700">
+                    Siap Terbit: <strong className="text-emerald-800 font-bold">{stats.verifiedFull}</strong>
+                  </span>
+                </div>
+              </div>
+
+              {/* Search & Filter Bar */}
+              <div className="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                <div className="flex-1 relative">
+                  <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <input
+                    type="text"
+                    value={certSearch}
+                    onChange={(e) => setCertSearch(e.target.value)}
+                    placeholder="Cari berdasarkan NIM, Nama Mahasiswa, Judul, atau No. Surat..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-8 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-blue-600 font-medium"
+                  />
+                  {certSearch && (
+                    <button
+                      onClick={() => setCertSearch('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <select
+                    value={certFilter}
+                    onChange={(e) => setCertFilter(e.target.value as any)}
+                    className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 focus:outline-none focus:border-blue-600 cursor-pointer font-medium"
+                  >
+                    <option value="all">Semua Status ({skripsi.length})</option>
+                    <option value="ready">Siap Terbit / Softcopy Lengkap ({stats.verifiedFull})</option>
+                    <option value="has_surat">Sudah Ada No. Surat ({stats.hasSurat})</option>
+                    <option value="no_surat">Belum Ada No. Surat ({skripsi.length - stats.hasSurat})</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Table / List View */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs">
+                {filteredCertificates.length === 0 ? (
+                  <div className="p-12 text-center text-slate-500">
+                    <FileText className="w-10 h-10 mx-auto text-slate-300 mb-2" />
+                    <p className="font-bold text-slate-700 text-sm">
+                      {skripsi.length === 0 ? 'Belum Ada Naskah Skripsi Masuk' : 'Tidak Ada Data yang Sesuai'}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {skripsi.length === 0
+                        ? 'Data naskah yang diajukan oleh mahasiswa akan tampil di sini untuk verifikasi & penerbitan tanda terima.'
+                        : 'Coba ubah kata kunci pencarian atau filter status yang Anda pilih.'}
                     </p>
                   </div>
-                </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+                        <tr>
+                          <th className="py-3 px-4 w-12 text-center">No</th>
+                          <th className="py-3 px-4 min-w-[200px]">Mahasiswa & Program Studi</th>
+                          <th className="py-3 px-4 min-w-[280px]">Judul Skripsi</th>
+                          <th className="py-3 px-4 text-center min-w-[130px]">Status Kelengkapan</th>
+                          <th className="py-3 px-4 min-w-[150px]">No. Surat Bebas Pustaka</th>
+                          <th className="py-3 px-4 text-right min-w-[170px]">Aksi Penerbitan</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {filteredCertificates.map((item, idx) => {
+                          const isReady = item.soft_copy === 1;
+                          const fak = fakultas.find((f) => f.id_fakultas === item.id_fakultas);
+                          const jur = jurusan.find((j) => j.id_jurusan === item.id_jurusan);
+
+                          return (
+                            <tr
+                              key={item.id_skripsi}
+                              className="hover:bg-blue-50/40 transition-colors group"
+                            >
+                              <td className="py-3.5 px-4 text-center font-mono text-slate-400 font-semibold">
+                                {idx + 1}
+                              </td>
+
+                              <td className="py-3.5 px-4">
+                                <div className="font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+                                  {item.nama}
+                                </div>
+                                <div className="font-mono text-[11px] font-semibold text-[#004080] mt-0.5">
+                                  NIM: {item.nim}
+                                </div>
+                                <div className="text-[11px] text-slate-500 mt-0.5">
+                                  {jur ? jur.jurusan : '-'} • {fak ? fak.fakultas : '-'}
+                                </div>
+                              </td>
+
+                              <td className="py-3.5 px-4">
+                                <p className="font-medium text-slate-800 line-clamp-2" title={item.judul}>
+                                  {item.judul}
+                                </p>
+                                <span className="text-[10px] text-slate-400 font-mono mt-1 block">
+                                  Tgl Serah: {item.tanggal ? new Date(item.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-'}
+                                </span>
+                              </td>
+
+                              <td className="py-3.5 px-4 text-center">
+                                {isReady ? (
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                    <span>Siap Terbit</span>
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                    <Clock className="w-3.5 h-3.5 text-amber-600" />
+                                    <span>Belum Lengkap</span>
+                                  </span>
+                                )}
+                              </td>
+
+                              <td className="py-3.5 px-4">
+                                {item.no_surat ? (
+                                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-blue-50 text-[#004080] border border-blue-200">
+                                    No. {item.no_surat}
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-mono text-slate-400 bg-slate-100 border border-slate-200">
+                                    Belum Terbit
+                                  </span>
+                                )}
+                              </td>
+
+                              <td className="py-3.5 px-4 text-right">
+                                <div className="flex items-center justify-end gap-2">
+                                  <button
+                                    onClick={() => setPreviewSkripsiPrint(item)}
+                                    className="px-3 py-1.5 rounded-xl bg-[#004080] hover:bg-[#003366] text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-xs hover:shadow-sm"
+                                    title="Cetak Surat Bebas Pustaka"
+                                  >
+                                    <Printer className="w-3.5 h-3.5" />
+                                    <span>Cetak Surat</span>
+                                  </button>
+
+                                  <button
+                                    onClick={() => {
+                                      const res = sendCertificateToGmail(item.id_skripsi, item.email);
+                                      showToast(res.message);
+                                    }}
+                                    className="p-2 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 transition-colors cursor-pointer"
+                                    title="Kirim ke Email Mahasiswa"
+                                  >
+                                    <Send className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
-
-              {/* Grid of Verified Skripsi Ready for Printing */}
-              {skripsi.length === 0 ? (
-                <div className="p-10 rounded-2xl bg-white border border-slate-200/90 text-center text-slate-500 shadow-xs">
-                  <FileText className="w-10 h-10 mx-auto text-slate-300 mb-2" />
-                  <p className="font-bold text-slate-700 text-sm">Belum Ada Naskah Skripsi Masuk</p>
-                  <p className="text-xs text-slate-500 mt-1">Data naskah yang diajukan oleh mahasiswa akan tampil di sini untuk verifikasi & penerbitan tanda terima.</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {skripsi.map((item) => {
-                  const isReady = item.soft_copy === 1;
-                  const fak = fakultas.find(f => f.id_fakultas === item.id_fakultas);
-                  const jur = jurusan.find(j => j.id_jurusan === item.id_jurusan);
-
-                  return (
-                    <div
-                      key={item.id_skripsi}
-                      className="p-5 rounded-2xl bg-white border border-slate-200/90 flex flex-col justify-between hover:border-blue-300 hover:shadow-md transition-all shadow-xs group"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between gap-2 mb-2">
-                          <span className="font-mono text-xs font-bold text-[#004080]">{item.nim}</span>
-                          {isReady ? (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
-                              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                              Siap Terbit
-                            </span>
-                          ) : (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
-                              <Clock className="w-3 h-3 text-amber-600" />
-                              Belum Lengkap
-                            </span>
-                          )}
-                        </div>
-
-                        <h4 className="text-sm font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
-                          {item.nama}
-                        </h4>
-                        <div className="text-[11px] text-slate-500 mt-0.5 font-medium">
-                          {jur ? jur.jurusan : '-'} • {fak ? fak.fakultas : '-'}
-                        </div>
-
-                        <p className="text-xs text-slate-600 mt-2.5 line-clamp-2">
-                          {item.judul}
-                        </p>
-
-                        <div className="mt-3 text-[11px] font-mono text-slate-600">
-                          No. Surat:{' '}
-                          <span className="text-[#004080] font-bold">{item.no_surat || 'Belum Terbit'}</span>
-                        </div>
-                      </div>
-
-                      <div className="mt-5 pt-3 border-t border-slate-100 flex items-center gap-2">
-                        <button
-                          onClick={() => setPreviewSkripsiPrint(item)}
-                          className="flex-1 py-2 px-3 rounded-xl bg-[#004080] hover:bg-[#003366] text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
-                        >
-                          <Printer className="w-3.5 h-3.5" />
-                          <span>Cetak Surat</span>
-                        </button>
-
-                        <button
-                          onClick={() => {
-                            const res = sendCertificateToGmail(item.id_skripsi, item.email);
-                            showToast(res.message);
-                          }}
-                          className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-                          title="Kirim ke Email"
-                        >
-                          <Send className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              )}
             </div>
           )}
 
